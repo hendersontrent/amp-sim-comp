@@ -20,13 +20,13 @@ load("data/raw-signals-numeric/amplifiers.Rda")
 p <- amplifiers %>%
   ggplot(aes(x = timepoint, y = amplitude, colour = group)) +
   geom_line() +
-  labs(title = "Time Series by Amplifier",
+  labs(title = "Time Series of Amplitude by Amplifier",
        x = "Time",
        y = "Amplitude",
        colour = NULL) +
   scale_colour_brewer(palette = "Dark2") +
-  theme(legend.position = "none") +
-  facet_wrap(~group)
+  theme(legend.position = "bottom") +
+  facet_wrap(~id)
 
 print(p)
 

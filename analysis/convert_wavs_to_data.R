@@ -38,7 +38,8 @@ get_waveforms <- function(){
     tmp <- as.data.frame(d@left) %>%
       rename(amplitude = 1) %>%
       mutate(amplifier = "XXX",
-             timepoint = seq_along(amplitude))
+             timepoint = seq_along(amplitude),
+             filename = f)
 
     # Store tidy dataframe
 
@@ -47,31 +48,32 @@ get_waveforms <- function(){
 
   outData <- data.table::rbindlist(storage, use.names = TRUE)
 
-  # Add group labels
+  # Add ID and group labels
 
   outData <- outData %>%
+    mutate(id = case_when(
+            filename == "data/raw-signals/Neural_Nolly_1.wav"         ~ "Neural DSP Nolly 1",
+            filename == "data/raw-signals/Neural_Nolly_2.wav"         ~ "Neural DSP Nolly 2",
+            filename == "data/raw-signals/Neural_Nolly_3.wav"         ~ "Neural DSP Nolly 3",
+            filename == "data/raw-signals/Neural_Nolly_4.wav"         ~ "Neural DSP Nolly 4",
+            filename == "data/raw-signals/Neural_Fortin_Nameless.wav" ~ "Neural DSP Fortin Nameless",
+            filename == "data/raw-signals/STL_Tonality_1_El34.wav"    ~ "STL Tonality 1_El34",
+            filename == "data/raw-signals/STL_Tonality_1_6L6.wav"     ~ "STL_Tonality 1_6L6",
+            filename == "data/raw-signals/STL_Tonality_1_KT88.wav"    ~ "STL_Tonality 1_KT88",
+            filename == "data/raw-signals/STL_Tonality_2_El34.wav"    ~ "STL Tonality 2_El34",
+            filename == "data/raw-signals/STL_Tonality_2_6L6.wav"     ~ "STL_Tonality 2_6L6",
+            filename == "data/raw-signals/STL_Tonality_2_KT88.wav"    ~ "STL_Tonality 2_KT88",
+            filename == "data/raw-signals/STL_Tonality_3_El34.wav"    ~ "STL Tonality 3_El34",
+            filename == "data/raw-signals/STL_Tonality_3_6L6.wav"     ~ "STL_Tonality 3_6L6",
+            filename == "data/raw-signals/STL_Tonality_3_KT88.wav"    ~ "STL_Tonality 3_KT88",
+            filename == "data/raw-signals/STL_Tonality_4_El34.wav"    ~ "STL Tonality 4_El34",
+            filename == "data/raw-signals/STL_Tonality_4_6L6.wav"     ~ "STL_Tonality 4_6L6",
+            filename == "data/raw-signals/STL_Tonality_4_KT88.wav"    ~ "STL_Tonality 4_KT88",
+            filename == "data/raw-signals/STL_Tonality_4_KT77.wav"    ~ "STL_Tonality 4_KT77")) %>%
     mutate(group = case_when(
-            x == "" ~ "",
-            x == "" ~ "",
-            x == "" ~ "",
-            x == "" ~ "",
-            x == "" ~ "",
-            x == "" ~ "",
-            x == "" ~ "",
-            x == "" ~ "",
-            x == "" ~ "",
-            x == "" ~ "",
-            x == "" ~ "",
-            x == "" ~ "",
-            x == "" ~ "",
-            x == "" ~ "",
-            x == "" ~ "",
-            x == "" ~ "",
-            x == "" ~ "",
-            x == "" ~ "")) %>%
-    mutate(group_meta = case_when(
-            agrepl("Neural", group) ~ "Neural DSP",
-            agrepl("STL", group) ~ "STL Tonality"))
+            grepl("neural", id) ~ "Neural_DSP",
+            grepl("stl", id)    ~ "STL_Tonality")) %>%
+    dplyr::select(-c(filename))
 
   return(outData)
 }
@@ -99,8 +101,8 @@ convert_amplifier_matrix <- function(amp_data){
   # Wrangle from long to wide
 
   timeSeriesData <- amp_data %>%
-    dplyr::select(-c(group, group_meta)) %>%
-    pivot_wider(id_cols = "amplifier", names_from = "timepoint", values_from = "amplitude")
+    dplyr::select(-c(group)) %>%
+    pivot_wider(id_cols = "id", names_from = "timepoint", values_from = "amplitude")
 
   timeSeriesData <- as.matrix(timeSeriesData)
 
@@ -113,9 +115,9 @@ convert_amplifier_matrix <- function(amp_data){
   #-------
 
   labels <- c(amp_data %>%
-                dplyr::select(c(amplifier)) %>%
+                dplyr::select(c(id)) %>%
                 distinct() %>%
-                pull(Name))
+                pull(id))
 
   # Write metadata
 
@@ -134,10 +136,11 @@ convert_amplifier_matrix <- function(amp_data){
 
   write.csv(keywords, "data/raw-signals-numeric/keywords.csv")
 
-  #------------------
+  #---------------------
   # Merge all 3 and
   # write MATLAB file
-  #------------------
+  # for hctsa processing
+  #---------------------
 
   writeMat("data/raw-signals-numeric/amplifiers.mat", timeSeriesData = timeSeriesData,
            labels = labels, keywords = keywords)
