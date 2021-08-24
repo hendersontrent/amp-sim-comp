@@ -8,10 +8,13 @@
 # Author: Trent Henderson, 24 August 2021
 #----------------------------------------
 
+library(data.table)
 library(dplyr)
 library(tidyr)
 library(readr)
 library(ggplot2)
+library(tuneR)
+library(R.matlab)
 
 # Create important folders if none exist
 
