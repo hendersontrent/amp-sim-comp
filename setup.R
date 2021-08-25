@@ -12,9 +12,12 @@ library(data.table)
 library(dplyr)
 library(tidyr)
 library(readr)
+library(stringr)
 library(ggplot2)
+library(ggrepel)
 library(tuneR)
 library(R.matlab)
+library(theft) # devtools::install_github("hendersontrent/theft")
 
 # Create important folders if none exist
 
@@ -25,3 +28,4 @@ if(!dir.exists('data/features')) dir.create('data/features')
 if(!dir.exists('DAW')) dir.create('DAW')
 if(!dir.exists('analysis')) dir.create('analysis')
 if(!dir.exists('output')) dir.create('output')
+if(!dir.exists('R')) dir.create('R')

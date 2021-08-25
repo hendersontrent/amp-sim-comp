@@ -16,7 +16,11 @@ Currently, analysis includes the following amplifiers which I have paid for:
 ## Basic methodology
 
 * Each amplifier head's setting are set to noon. All pedals, cabinets and effects are turned off.
-* A sine sweep is fed into each amplifier, producing a standardised waveform for each
-* The waveform is converted to a numerical time series x amplitude matrix
-* Time-series features are computed on the time series x amplitude matrix for each amplifier
-* Analysis is conducted on the feature space to identify any empirical structure in the data
+* A 20Hz-20kHz sine sweep is fed into each amplifier, producing a standardised output response for each amplifier.
+* The waveform is converted to a numerical time series x amplitude matrix.
+* Time-series features are computed on the time series x amplitude matrix for each amplifier.
+* Analysis is conducted on the feature space to identify any empirical structure in the data.
+
+## Other notes
+
+This repository is very large due to the number of .wav and .mp3 files and the [Reaper](https://www.reaper.fm) project files.
