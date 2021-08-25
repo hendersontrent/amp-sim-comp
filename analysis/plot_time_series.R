@@ -25,11 +25,30 @@ p <- amplifiers %>%
        y = "Amplitude",
        colour = NULL) +
   scale_colour_brewer(palette = "Dark2") +
-  theme(legend.position = "none") +
+  theme(legend.position = "none",
+        axis.text.x = element_blank()) +
   facet_wrap(~id)
 
 print(p)
 
+# Produce graphic for random 1000 timepoints
+
+p1 <- amplifiers %>%
+  filter(timepoint >= 10000 & timepoint <= 11000) %>%
+  ggplot(aes(x = timepoint, y = amplitude, colour = group)) +
+  geom_line() +
+  labs(title = "Time Series of Amplitude by Amplifier",
+       x = "Time",
+       y = "Amplitude",
+       colour = NULL) +
+  scale_colour_brewer(palette = "Dark2") +
+  theme(legend.position = "none",
+        axis.text.x = element_blank()) +
+  facet_wrap(~id)
+
+print(p1)
+
 # Save plots
 
 ggsave("output/time-series.png", p)
+ggsave("output/time-series-random-1000.png", p1)

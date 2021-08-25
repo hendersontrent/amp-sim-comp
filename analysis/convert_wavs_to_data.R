@@ -64,18 +64,18 @@ get_waveforms <- function(){
             filename == "data/raw-signals/Neural_Nolly_4.wav"         ~ "Neural DSP Nolly 4",
             filename == "data/raw-signals/Neural_Fortin_Nameless.wav" ~ "Neural DSP Fortin Nameless",
             filename == "data/raw-signals/STL_Tonality_1_EL34.wav"    ~ "STL Tonality 1_EL34",
-            filename == "data/raw-signals/STL_Tonality_1_6L6.wav"     ~ "STL_Tonality 1_6L6",
-            filename == "data/raw-signals/STL_Tonality_1_KT88.wav"    ~ "STL_Tonality 1_KT88",
+            filename == "data/raw-signals/STL_Tonality_1_6L6.wav"     ~ "STL Tonality 1_6L6",
+            filename == "data/raw-signals/STL_Tonality_1_KT88.wav"    ~ "STL Tonality 1_KT88",
             filename == "data/raw-signals/STL_Tonality_2_EL34.wav"    ~ "STL Tonality 2_EL34",
-            filename == "data/raw-signals/STL_Tonality_2_6L6.wav"     ~ "STL_Tonality 2_6L6",
-            filename == "data/raw-signals/STL_Tonality_2_KT88.wav"    ~ "STL_Tonality 2_KT88",
+            filename == "data/raw-signals/STL_Tonality_2_6L6.wav"     ~ "STL Tonality 2_6L6",
+            filename == "data/raw-signals/STL_Tonality_2_KT88.wav"    ~ "STL Tonality 2_KT88",
             filename == "data/raw-signals/STL_Tonality_3_EL34.wav"    ~ "STL Tonality 3_EL34",
-            filename == "data/raw-signals/STL_Tonality_3_6L6.wav"     ~ "STL_Tonality 3_6L6",
-            filename == "data/raw-signals/STL_Tonality_3_KT88.wav"    ~ "STL_Tonality 3_KT88",
+            filename == "data/raw-signals/STL_Tonality_3_6L6.wav"     ~ "STL Tonality 3_6L6",
+            filename == "data/raw-signals/STL_Tonality_3_KT88.wav"    ~ "STL Tonality 3_KT88",
             filename == "data/raw-signals/STL_Tonality_4_EL34.wav"    ~ "STL Tonality 4_EL34",
-            filename == "data/raw-signals/STL_Tonality_4_6L6.wav"     ~ "STL_Tonality 4_6L6",
-            filename == "data/raw-signals/STL_Tonality_4_KT88.wav"    ~ "STL_Tonality 4_KT88",
-            filename == "data/raw-signals/STL_Tonality_4_KT77.wav"    ~ "STL_Tonality 4_KT77")) %>%
+            filename == "data/raw-signals/STL_Tonality_4_6L6.wav"     ~ "STL Tonality 4_6L6",
+            filename == "data/raw-signals/STL_Tonality_4_KT88.wav"    ~ "STL Tonality 4_KT88",
+            filename == "data/raw-signals/STL_Tonality_4_KT77.wav"    ~ "STL Tonality 4_KT77")) %>%
     mutate(group = case_when(
             grepl("Neural", id) ~ "Neural_DSP",
             grepl("STL", id)    ~ "STL_Tonality")) %>%
