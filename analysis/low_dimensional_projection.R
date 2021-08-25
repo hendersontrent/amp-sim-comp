@@ -49,8 +49,8 @@ p <- plot_low_dimension2(featMat_catch22_clean,
                          perplexity = 5,
                          plot = TRUE,
                          show_covariance = FALSE) +
-  labs(title = "Low dimensional projection of amp signals using t-SNE",
-       subtitle = str_wrap("Each point is the amplitude time series of a 20Hz-20kHz sine sweep passed through each amplifier head with all setting at noon and all effects/cabs/additional EQ turned off. A set of 22 statistical features was then calculated on the time x amplitude vector for each amplifier head, and passed into a t-SNE algorithm (with perplexity = 5) for dimension reduction into a 2-dimensional plot. STL Tonality is Will Putney plugin only.", width = 120),
+  labs(title = "Low dimensional projection of amplifier head time-series features using t-SNE",
+       subtitle = str_wrap("Each point is the amplitude time series of a 20Hz-20kHz sine sweep passed through each amplifier head with all settings at noon and all effects/cabs/additional EQ turned off. A set of 22 statistical features was then calculated on the time x amplitude vector for each head and passed into a t-SNE algorithm (with perplexity = 5) for projection onto a 2-D plot. STL Tonality is Will Putney plugin only.", width = 120),
        caption = "Analysis: Trent Henderson. Source code: https://github.com/hendersontrent/amp-sim-comp")
 
 print(p)

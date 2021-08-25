@@ -262,7 +262,7 @@ plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", grou
                         colour = NULL) +
           ggplot2::scale_fill_manual(values = mypalette) +
           ggplot2::theme_gray() +
-          ggrepel::geom_label_repel(aes(label = id, colour = group_id), size = 2.5) +
+          ggrepel::geom_label_repel(aes(label = id, colour = group_id), size = 2.5, fontface = "bold") +
           ggplot2::theme(legend.position = "none",
                          legend.key = ggplot2::element_blank())
       } else{
@@ -273,7 +273,7 @@ plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", grou
                         colour = NULL) +
           ggplot2::scale_fill_manual(values = mypalette) +
           ggplot2::theme_gray() +
-          ggrepel::geom_label_repel(aes(label = id, colour = group_id), size = 2.5) +
+          ggrepel::geom_label_repel(aes(label = id, colour = group_id), size = 2.5, fontface = "bold") +
           ggplot2::theme(legend.position = "none",
                          legend.key = ggplot2::element_blank())
       }
