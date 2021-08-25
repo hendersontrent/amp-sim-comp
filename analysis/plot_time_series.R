@@ -25,11 +25,11 @@ p <- amplifiers %>%
        y = "Amplitude",
        colour = NULL) +
   scale_colour_brewer(palette = "Dark2") +
-  theme(legend.position = "bottom") +
+  theme(legend.position = "none") +
   facet_wrap(~id)
 
 print(p)
 
-# Save plot
+# Save plots
 
 ggsave("output/time-series.png", p)

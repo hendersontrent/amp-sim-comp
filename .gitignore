@@ -4,6 +4,8 @@
 
 # Session Data files
 .RData
+.Rda
+data/raw-signals-numeric/amplifiers.Rda
 
 # User-specific files
 .Ruserdata

@@ -23,6 +23,13 @@ get_waveforms <- function(){
 
   files <- list.files("data/raw-signals", full.names = TRUE, pattern = "\\.wav", all.files = TRUE)
 
+  # Remove sine sweep files
+
+  removals <- c("data/raw-signals/CSC_sweep_20-20k.wav", "data/raw-signals/CSC_sweep_20-20k.wav.reapeaks")
+  files <- files[!(files %in% removals)]
+
+  # Loop through each filepath and parse the data
+
   storage <- list()
 
   for(f in files){
@@ -37,8 +44,7 @@ get_waveforms <- function(){
 
     tmp <- as.data.frame(d@left) %>%
       rename(amplitude = 1) %>%
-      mutate(amplifier = "XXX",
-             timepoint = seq_along(amplitude),
+      mutate(timepoint = row_number(),
              filename = f)
 
     # Store tidy dataframe
@@ -57,30 +63,31 @@ get_waveforms <- function(){
             filename == "data/raw-signals/Neural_Nolly_3.wav"         ~ "Neural DSP Nolly 3",
             filename == "data/raw-signals/Neural_Nolly_4.wav"         ~ "Neural DSP Nolly 4",
             filename == "data/raw-signals/Neural_Fortin_Nameless.wav" ~ "Neural DSP Fortin Nameless",
-            filename == "data/raw-signals/STL_Tonality_1_El34.wav"    ~ "STL Tonality 1_El34",
+            filename == "data/raw-signals/STL_Tonality_1_EL34.wav"    ~ "STL Tonality 1_EL34",
             filename == "data/raw-signals/STL_Tonality_1_6L6.wav"     ~ "STL_Tonality 1_6L6",
             filename == "data/raw-signals/STL_Tonality_1_KT88.wav"    ~ "STL_Tonality 1_KT88",
-            filename == "data/raw-signals/STL_Tonality_2_El34.wav"    ~ "STL Tonality 2_El34",
+            filename == "data/raw-signals/STL_Tonality_2_EL34.wav"    ~ "STL Tonality 2_EL34",
             filename == "data/raw-signals/STL_Tonality_2_6L6.wav"     ~ "STL_Tonality 2_6L6",
             filename == "data/raw-signals/STL_Tonality_2_KT88.wav"    ~ "STL_Tonality 2_KT88",
-            filename == "data/raw-signals/STL_Tonality_3_El34.wav"    ~ "STL Tonality 3_El34",
+            filename == "data/raw-signals/STL_Tonality_3_EL34.wav"    ~ "STL Tonality 3_EL34",
             filename == "data/raw-signals/STL_Tonality_3_6L6.wav"     ~ "STL_Tonality 3_6L6",
             filename == "data/raw-signals/STL_Tonality_3_KT88.wav"    ~ "STL_Tonality 3_KT88",
-            filename == "data/raw-signals/STL_Tonality_4_El34.wav"    ~ "STL Tonality 4_El34",
+            filename == "data/raw-signals/STL_Tonality_4_EL34.wav"    ~ "STL Tonality 4_EL34",
             filename == "data/raw-signals/STL_Tonality_4_6L6.wav"     ~ "STL_Tonality 4_6L6",
             filename == "data/raw-signals/STL_Tonality_4_KT88.wav"    ~ "STL_Tonality 4_KT88",
             filename == "data/raw-signals/STL_Tonality_4_KT77.wav"    ~ "STL_Tonality 4_KT77")) %>%
     mutate(group = case_when(
-            grepl("neural", id) ~ "Neural_DSP",
-            grepl("stl", id)    ~ "STL_Tonality")) %>%
+            grepl("Neural", id) ~ "Neural_DSP",
+            grepl("STL", id)    ~ "STL_Tonality")) %>%
     dplyr::select(-c(filename))
 
   return(outData)
 }
 
-# Save file for use in R
+# Run function and save file for use in R
 
-amplifiers <- save(get_waveforms, file = "data/raw-signals-numeric/amplifiers.Rda")
+amplifiers <- get_waveforms()
+save(amplifiers, file = "data/raw-signals-numeric/amplifiers.Rda")
 
 #------------------ Exports for general use --------------
 
