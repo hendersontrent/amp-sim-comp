@@ -202,10 +202,6 @@ plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", grou
 
     if(!is.null(group_var)){
 
-      # Define 9-point colour palette (from: https://www.carbondesignsystem.com/data-visualization/color-palettes/)
-
-      mypalette <- c("#8a3ffc", "#33b1ff", "#007d79", "#ff7eb6", "#fa4d56", "#6fdc8c", "#4589ff", "#d12771", "#ba4e00")
-
       # Retrieve groups
 
       if(low_dim_method == "PCA"){
@@ -240,8 +236,7 @@ plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", grou
       if(show_covariance){
         p <- p +
           ggplot2::stat_ellipse(ggplot2::aes(x = .fitted1, y = .fitted2, fill = group_id), geom = "polygon", alpha = 0.2) +
-          ggplot2::guides(fill = FALSE) +
-          ggplot2::scale_fill_manual(values = mypalette)
+          ggplot2::guides(fill = FALSE)
       } else{
 
       }
@@ -260,7 +255,6 @@ plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", grou
                         x = paste0("PC 1"," (",eigen_pc1,")"),
                         y = paste0("PC 2"," (",eigen_pc2,")"),
                         colour = NULL) +
-          ggplot2::scale_fill_manual(values = mypalette) +
           ggplot2::theme_gray() +
           ggrepel::geom_label_repel(aes(label = id, colour = group_id), size = 2.5, fontface = "bold") +
           ggplot2::theme(legend.position = "none",
@@ -271,7 +265,6 @@ plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", grou
                         x = "Dimension 1",
                         y = "Dimension 2",
                         colour = NULL) +
-          ggplot2::scale_fill_manual(values = mypalette) +
           ggplot2::theme_gray() +
           ggrepel::geom_label_repel(aes(label = id, colour = group_id), size = 2.5, fontface = "bold") +
           ggplot2::theme(legend.position = "none",
