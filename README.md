@@ -12,6 +12,7 @@ Currently, analysis includes the following amplifiers:
 * Archetype Nolly (Neural DSP) - 4 amplifiers
 * Archetype Gojira (Neural DSP) - 3 amplifiers
 * Archetype Cory Wong (Neural DSP) - 3 amplifiers
+* Archetype Plini (Neural DSP) - 3 amplifiers
 * Fortin Nameless (Neural DSP) - 1 amplifier
 * STL Tonality Will Putney (STL) - 4 amplifiers with 3-4 tube settings for each
 

@@ -81,7 +81,10 @@ get_waveforms <- function(){
             filename == "data/raw-signals/Neural_CoryWong_3.wav"      ~ "Neural DSP CoryWong 3",
             filename == "data/raw-signals/Neural_Gojira_1.wav"        ~ "Neural DSP Gojira 1",
             filename == "data/raw-signals/Neural_Gojira_2.wav"        ~ "Neural DSP Gojira 2",
-            filename == "data/raw-signals/Neural_Gojira_3.wav"        ~ "Neural DSP Gojira 3")) %>%
+            filename == "data/raw-signals/Neural_Gojira_3.wav"        ~ "Neural DSP Gojira 3",
+            filename == "data/raw-signals/Neural_Plini_1.wav"         ~ "Neural DSP Plini 1",
+            filename == "data/raw-signals/Neural_Plini_2.wav"         ~ "Neural DSP Plini 2",
+            filename == "data/raw-signals/Neural_Plini_3.wav"         ~ "Neural DSP Plini 3")) %>%
     mutate(group = case_when(
             grepl("Neural", id) ~ "Neural_DSP",
             grepl("STL", id)    ~ "STL_Tonality")) %>%
