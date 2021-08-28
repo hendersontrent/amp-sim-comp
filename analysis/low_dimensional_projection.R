@@ -33,8 +33,7 @@ featMat_catch22_clean <- featMat_catch22 %>%
           id == "STL_Tonality 4_KT88" ~ "STL Tonality 4_KT88",
           TRUE                        ~ id)) %>%
   mutate(amplifier = gsub("_.*", "\\1", id)) %>%
-  mutate(metagroup = gsub('[[:digit:]]+', '', amplifier),
-         metagroup = gsub('_', '', metagroup))
+  mutate(amplifier = ifelse(grepl("Neural", amplifier), gsub('[[:digit:]]+', '', amplifier), amplifier))
 
 #------------- Produce graphics ------------
 
@@ -47,7 +46,7 @@ source("R/plot_low_dimension2.R") # As original {theft function only has 8 colou
 p <- plot_low_dimension2(featMat_catch22_clean,
                          is_normalised = FALSE,
                          id_var = "id",
-                         group_var = "metagroup",
+                         group_var = "amplifier",
                          low_dim_method = "PCA",
                          method = "z-score",
                          plot = TRUE,
