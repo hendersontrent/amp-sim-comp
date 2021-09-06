@@ -32,4 +32,4 @@ print(p)
 
 # Save plot
 
-ggsave("output/correlation-matrix.png", p)
+ggsave("output/correlation-matrix.png", p, units = "in", height = 11, width = 11)
