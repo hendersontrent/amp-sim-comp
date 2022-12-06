@@ -37,6 +37,10 @@ XX
 
 XX
 
+```{r timeseries, echo = FALSE, fig.cap = "Amplitude plot over time for first 1000 samples for each amplifier head", out.width = '100%'}
+knitr::include_graphics("time-series.pdf")
+```
+
 # Results
 
 XX
