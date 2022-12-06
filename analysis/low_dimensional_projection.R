@@ -37,10 +37,6 @@ featMat_catch22_clean <- featMat_catch22 %>%
 
 #------------- Produce graphics ------------
 
-#------
-# t-SNE
-#------
-
 source("R/plot_low_dimension2.R") # As original {theft function only has 8 colours and we want slight different aesthetics}
 
 p <- plot_low_dimension2(featMat_catch22_clean,
@@ -50,13 +46,12 @@ p <- plot_low_dimension2(featMat_catch22_clean,
                          low_dim_method = "PCA",
                          method = "z-score",
                          plot = TRUE,
-                         show_covariance = FALSE) +
-  labs(title = "Low dimensional projection of amplifier head time-series features using PCA",
-       subtitle = str_wrap("Each point is the amplitude time series of a 20Hz-20kHz sine sweep passed through each amplifier head with all settings at noon and all effects/cabs/additional EQ turned off. A set of 22 statistical features was then calculated on the time x amplitude vector for each head and passed into a principal components analysis for projection onto a 2-D plot. STL Tonality is Will Putney plugin only.", width = 120),
-       caption = "Analysis: Trent Henderson. Source code: https://github.com/hendersontrent/amp-sim-comp")
+                         show_covariance = FALSE,
+                         seed = 123)
 
 print(p)
 
 # Save plot
 
-ggsave("output/catch22-low-dim.png", p, units = "in", width = 10, height = 9.5)
+ggsave("output/catch22-low-dim.png", p, units = "in", width = 10, height = 10)
+ggsave("report/catch22-low-dim.pdf", p, units = "in", width = 10, height = 10)

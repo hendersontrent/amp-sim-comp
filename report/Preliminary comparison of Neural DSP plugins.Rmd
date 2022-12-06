@@ -1,0 +1,46 @@
+---
+title: "Preliminary comparison of Neural DSP plugins"
+author: "Trent Henderson"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: yes
+    toc_depth: 4
+    number_sections: yes
+    theme: paper
+  pdf_document:
+    toc: yes
+    toc_depth: '4'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+XX
+
+## Feature-based time-series analysis
+
+XX
+
+# Method
+
+XX
+
+# Results
+
+XX
+
+## Low-dimensional projection
+
+XX
+
+## Plugin correlations
+
+XX
+
+# Conclusion
+
+XX
