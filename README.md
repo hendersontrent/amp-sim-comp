@@ -9,7 +9,7 @@ Many different virtual guitar amplifier simulators exist today. While most music
 
 Currently, analysis includes the following amplifiers:
 
-* Archetype Nolly (Neural DSP) - 4 amplifiersx
+* Archetype Nolly (Neural DSP) - 4 amplifiers
 * Archetype Gojira (Neural DSP) - 3 amplifiers
 * Archetype Cory Wong (Neural DSP) - 3 amplifiers
 * Archetype Plini (Neural DSP) - 3 amplifiers
