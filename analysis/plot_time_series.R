@@ -35,5 +35,5 @@ print(p)
 
 # Save plots
 
-ggsave("output/time-series.png", p, units = "in", height = 14, width = 10)
-ggsave("report/time-series.pdf", p, units = "in", height = 14, width = 10)
+ggsave("output/time-series.png", p, units = "in", height = 8, width = 7)
+ggsave("report/time-series.png", p, units = "in", height = 8, width = 7)

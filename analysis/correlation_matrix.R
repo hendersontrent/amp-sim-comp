@@ -48,9 +48,9 @@ print(p2)
 
 #-------------------- Save plots ------------------
 
-ggsave("output/correlation-matrix.png", p, units = "in", height = 10, width = 10)
-ggsave("report/correlation-matrix.pdf", p, units = "in", height = 10, width = 10)
-ggsave("output/correlation-matrix-feature.png", p1, units = "in", height = 10, width = 10)
-ggsave("report/correlation-matrix-feature.pdf", p1, units = "in", height = 10, width = 10)
-ggsave("output/timeseries-by-feature-matrix.png", p2, units = "in", height = 10, width = 10)
-ggsave("report/timeseries-by-feature-matrix.pdf", p2, units = "in", height = 10, width = 10)
+ggsave("output/correlation-matrix.png", p, units = "in", height = 6, width = 6)
+ggsave("report/correlation-matrix.png", p, units = "in", height = 6, width = 6)
+ggsave("output/correlation-matrix-feature.png", p1, units = "in", height = 6, width = 6)
+ggsave("report/correlation-matrix-feature.png", p1, units = "in", height = 6, width = 6)
+ggsave("output/timeseries-by-feature-matrix.png", p2, units = "in", height = 6, width = 6)
+ggsave("report/timeseries-by-feature-matrix.png", p2, units = "in", height = 6, width = 6)
