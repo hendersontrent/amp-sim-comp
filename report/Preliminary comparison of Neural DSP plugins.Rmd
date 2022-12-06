@@ -37,8 +37,20 @@ XX
 
 XX
 
-```{r timeseries, echo = FALSE, fig.cap = "Amplitude plot over time for first 1000 samples for each amplifier head", fig.dim = c(7, 8), out.width = "75%", out.height = "75%"}
+```{r timeseries, echo = FALSE, fig.cap = "Amplitude plot over time for first 1000 samples for each amplifier head", fig.dim = c(8, 8), out.width = "75%", out.height = "75%"}
 knitr::include_graphics("time-series.png")
+```
+
+XX
+
+```{r timeseries2, echo = FALSE, fig.cap = "Amplitude plot over time for first middle range of 50 samples for each amplifier head", fig.dim = c(8, 8), out.width = "75%", out.height = "75%"}
+knitr::include_graphics("time-series2.png")
+```
+
+XX
+
+```{r timeseries3, echo = FALSE, fig.cap = "Amplitude plot over time for last 1000 samples for each amplifier head", fig.dim = c(8, 8), out.width = "75%", out.height = "75%"}
+knitr::include_graphics("time-series3.png")
 ```
 
 # Results
