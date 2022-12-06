@@ -30,3 +30,11 @@ if(!dir.exists('analysis')) dir.create('analysis')
 if(!dir.exists('output')) dir.create('output')
 if(!dir.exists('R')) dir.create('R')
 if(!dir.exists('report')) dir.create('report')
+
+# Load custom functions
+
+r_files <- list.files("R", full.names = TRUE, pattern = "\\.[Rr]")
+
+for(f in r_files){
+  source(f)
+}

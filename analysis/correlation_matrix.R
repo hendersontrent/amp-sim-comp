@@ -1,35 +1,41 @@
 #----------------------------------------
-# This script sets out to produce a
-# correlation matrix plot of the feature
-# vectors
+# This script sets out to produce
+# correlation matrix plots between plugins
 #
 # NOTE: This script requires setup.R and
-# analysis/catch22.R to have been run first
+# analysis/catch22.R to have been run
+# first
 #----------------------------------------
 
 #----------------------------------------
 # Author: Trent Henderson, 27 August 2021
 #----------------------------------------
 
-# Load feature matrix
+# Load data and feature matrix
 
-load("data/features/featMat_catch22.Rda")
+load("data/raw-signals-numeric/amplifiers.Rda")
+load("data/features/feat_mat.Rda")
 
-# Draw plot
+# Draw time series corr plot
 
-p <- plot_connectivity_matrix(featMat_catch22,
-                         is_normalised = FALSE,
-                         id_var = "id",
-                         names_var = "names",
-                         values_var = "values",
-                         method = "z-score",
-                         interactive = FALSE) +
-  labs(title = "Pairwise correlation matrix of feature vectors") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1),
-        axis.text.y = element_text())
+p <- plot_ts_correlations2(amplifiers,
+                           id_var = "id",
+                           time_var = "timepoint",
+                           values_var = "amplitude",
+                           cor_method = "pearson",
+                           clust_method = "average",
+                           interactive = FALSE)
 
 print(p)
 
-# Save plot
+# Draw feature vector corr plot
 
-ggsave("output/correlation-matrix.png", p, units = "in", height = 11, width = 11)
+p1 <- plot_vector_corrs(data = feat_mat, clust_method = "average", cor_method = "pearson")
+print(p1)
+
+# Save plots
+
+ggsave("output/correlation-matrix.png", p, units = "in", height = 10, width = 10)
+ggsave("report/correlation-matrix.pdf", p, units = "in", height = 10, width = 10)
+ggsave("output/correlation-matrix-feature.png", p1, units = "in", height = 10, width = 10)
+ggsave("report/correlation-matrix-feature.pdf", p1, units = "in", height = 10, width = 10)

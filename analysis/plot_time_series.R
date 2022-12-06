@@ -15,40 +15,25 @@
 
 load("data/raw-signals-numeric/amplifiers.Rda")
 
-# Produce graphic
+# Draw plot for first 1000 time points
 
 p <- amplifiers %>%
-  ggplot(aes(x = timepoint, y = amplitude, colour = group)) +
+  filter(timepoint <= 1000) %>%
+  ggplot(aes(x = timepoint, y = amplitude, colour = id)) +
   geom_line() +
-  labs(title = "Time Series of Amplitude by Amplifier",
-       x = "Time",
+  labs(x = "Time",
        y = "Amplitude",
        colour = NULL) +
-  scale_colour_brewer(palette = "Dark2") +
+  theme_bw() +
   theme(legend.position = "none",
-        axis.text.x = element_blank()) +
-  facet_wrap(~id)
+        panel.grid.minor = element_blank(),
+        strip.background = element_blank(),
+        strip.text = element_text(face = "bold")) +
+  facet_wrap(~id, ncol = 3, scales = "free_y")
 
 print(p)
 
-# Produce graphic for random 1000 timepoints
-
-p1 <- amplifiers %>%
-  filter(timepoint >= 10000 & timepoint <= 11000) %>%
-  ggplot(aes(x = timepoint, y = amplitude, colour = group)) +
-  geom_line() +
-  labs(title = "Time Series of Amplitude by Amplifier",
-       x = "Time",
-       y = "Amplitude",
-       colour = NULL) +
-  scale_colour_brewer(palette = "Dark2") +
-  theme(legend.position = "none",
-        axis.text.x = element_blank()) +
-  facet_wrap(~id)
-
-print(p1)
-
 # Save plots
 
-ggsave("output/time-series.png", p)
-ggsave("output/time-series-random-1000.png", p1)
+ggsave("output/time-series.png", p, units = "in", height = 14, width = 10)
+ggsave("report/time-series.pdf", p, units = "in", height = 14, width = 10)

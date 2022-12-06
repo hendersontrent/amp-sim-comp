@@ -21,27 +21,6 @@
 #' @param seed fixed number for R's random number generator to ensure reproducibility
 #' @return if \code{plot = TRUE}, returns an object of class \code{ggplot}, if \code{plot = FALSE} returns an object of class dataframe with PCA results
 #' @author Trent Henderson
-#' @export
-#' @examples
-#' \donttest{
-#' featMat <- calculate_features(data = simData,
-#'   id_var = "id",
-#'   time_var = "timepoint",
-#'   values_var = "values",
-#'   group_var = "process",
-#'   feature_set = "catch22",
-#'   seed = 123)
-#'
-#' plot_low_dimension2(featMat,
-#'   is_normalised = FALSE,
-#'   id_var = "id",
-#'   group_var = "group",
-#'   method = "RobustSigmoid",
-#'   low_dim_method = "PCA",
-#'   plot = TRUE,
-#'   show_covariance = TRUE,
-#'   seed = 123)
-#' }
 #'
 
 plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", group_var = NULL,

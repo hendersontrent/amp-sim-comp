@@ -1,6 +1,6 @@
 #----------------------------------------
-# This script sets out to see what catch22
-# can do on the data
+# This script sets out to calculate time
+# series features
 #
 # NOTE: This script requires setup.R to
 # have been run first
@@ -16,13 +16,14 @@ load("data/raw-signals-numeric/amplifiers.Rda")
 
 # Compute features
 
-featMat_catch22 <- calculate_features(data = amplifiers,
-                              id_var = "id",
-                              time_var = "timepoint",
-                              values_var = "amplitude",
-                              group_var = "group",
-                              feature_set = "catch22")
+feat_mat <- calculate_features(data = amplifiers,
+                               id_var = "id",
+                               time_var = "timepoint",
+                               values_var = "amplitude",
+                               group_var = "group",
+                               feature_set = "catch22",
+                               seed = 123)
 
 # Save output
 
-save(featMat_catch22, file = "data/features/featMat_catch22.Rda")
+save(feat_mat, file = "data/features/feat_mat.Rda")
