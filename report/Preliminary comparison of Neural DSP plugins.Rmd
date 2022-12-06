@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Executive summary
 
-The availability of guitar plugins for a plethora of tonal qualities has soared over recent years, with Neural DSP pushing the boundaries at the forefront of algorithm development for such plugins. Similar to physical amplifiers, choices are endless, but musicians are highly skilled in distinguishing between options, preferring one amplifier due to its gain structure, or another due to its rounded bottom end. However, as yet, little quantitative research has been done into the factors which distinguish an amplifier (or plugin) from another. For the first time, this work uses feature-based time-series analysis to understand similarity between Neural DSP plugins and that of a competitor. It was found that various amplifier heads within separate plugins (e.g., heads within Archetype: Nolly) do cluster together based on temporal properties of their signal. This provides a novel lens through which to understand digital signal processing technologies and a quantitative way to measure uniqueness of a new product or similarity to an existing benchmark product.
+The availability of guitar plugins for a plethora of tonal qualities has soared over recent years, with Neural DSP pushing the boundaries at the forefront of algorithm development for such plugins. Similar to physical amplifiers, choices are endless, but musicians are highly skilled in distinguishing between options, preferring one amplifier due to its gain structure, or another due to its rounded bottom end. However, as yet, little quantitative research has been done into the factors which distinguish an amplifier (or plugin) from another. For the first time, this work uses feature-based time-series analysis to understand similarity between Neural DSP plugins and that of a competitor. It was found that various amplifier heads within separate plugins (e.g., heads within Archetype: Nolly) cluster together based on a set of general temporal properties of their signal. This provides a novel lens through which to understand digital signal processing technologies and a quantitative way to measure uniqueness of a new product or similarity to an existing benchmark product.
 
 # Introduction
 
@@ -65,12 +65,32 @@ XX
 knitr::include_graphics("catch22-low-dim-tsne.pdf")
 ```
 
+## Data matrix visualisation
+
+XX
+
+```{r corplot, echo = FALSE, fig.cap = "Time-series by feature data matrix", out.width = '100%'}
+knitr::include_graphics("timeseries-by-feature-matrix.pdf")
+```
+
 ## Plugin correlations
 
 XX
 
-```{r corplot, echo = FALSE, fig.cap = "Time-series by time-series correlations between amplifier heads", out.width = '100%'}
+### Pairwise time-series correlations
+
+XX
+
+```{r corplot, echo = FALSE, fig.cap = "Time-series by time-series correlations between amplifier heads on the time domain", out.width = '100%'}
 knitr::include_graphics("correlation-matrix.pdf")
+```
+
+### Pairwise time series feature vector correlations
+
+XX
+
+```{r corplot, echo = FALSE, fig.cap = "Time-series by time-series correlations between amplifier heads in feature space", out.width = '100%'}
+knitr::include_graphics("correlation-matrix-feature.pdf")
 ```
 
 # Conclusion
