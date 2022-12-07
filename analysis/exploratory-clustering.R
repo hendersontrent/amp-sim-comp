@@ -78,46 +78,77 @@ k_labels <- assignments %>%
   dplyr::select(c(id, group, .cluster))
 
 # Add in some qualitative labels of amplifier type
+# NOTE: We are using the following system of labelling:
+#    - Acoustic/Other
+#    - Clean
+#    - Low Gain
+#    - Mid Gain
+#    - High Gain
 
 k_labels <- k_labels %>%
   mutate(amp_type = case_when(
-          id == "Neural DSP CoryWong 1"      ~ "",
-          id == "Neural DSP CoryWong 2"      ~ "",
-          id == "Neural DSP CoryWong 3"      ~ "",
-          id == "Neural DSP Fortin Nameless" ~ "",
-          id == "Neural DSP Gojira 1"        ~ "",
-          id == "Neural DSP Gojira 2"        ~ "",
-          id == "Neural DSP Gojira 3"        ~ "",
-          id == "Neural DSP Nolly 1"         ~ "",
-          id == "Neural DSP Nolly 2"         ~ "",
-          id == "Neural DSP Nolly 3"         ~ "",
-          id == "Neural DSP Nolly 4"         ~ "",
-          id == "Neural DSP Plini 1"         ~ "",
-          id == "Neural DSP Plini 2"         ~ "",
-          id == "Neural DSP Plini 3"         ~ "",
-          id == "Neural DSP TimHenson 1"     ~ "",
-          id == "Neural DSP TimHenson 2"     ~ "",
-          id == "Neural DSP TimHenson 3"     ~ "",
-          id == "STL Tonality 1_6L6"         ~ "",
-          id == "STL Tonality 1_EL34"        ~ "",
-          id == "STL Tonality 1_KT88"        ~ "",
-          id == "STL Tonality 2_6L6"         ~ "",
-          id == "STL Tonality 2_EL34"        ~ "",
-          id == "STL Tonality 2_KT88"        ~ "",
-          id == "STL Tonality 3_6L6"         ~ "",
-          id == "STL Tonality 3_EL34"        ~ "",
-          id == "STL Tonality 3_KT88"        ~ "",
-          id == "STL Tonality 4_6L6"         ~ "",
-          id == "STL Tonality 4_EL3"         ~ "",
-          id == "STL Tonality 4_EL3"         ~ "",
-          id == "STL Tonality 4_KT88"        ~ ""))
+          id == "Neural DSP CoryWong 1"      ~ "Acoustic/Other",
+          id == "Neural DSP CoryWong 2"      ~ "Clean",
+          id == "Neural DSP CoryWong 3"      ~ "Low Gain",
+          id == "Neural DSP Fortin Nameless" ~ "High Gain",
+          id == "Neural DSP Gojira 1"        ~ "Clean",
+          id == "Neural DSP Gojira 2"        ~ "High Gain",
+          id == "Neural DSP Gojira 3"        ~ "High Gain",
+          id == "Neural DSP Nolly 1"         ~ "Clean", # Crunch
+          id == "Neural DSP Nolly 2"         ~ "Mid Gain", # Crunch
+          id == "Neural DSP Nolly 3"         ~ "High Gain", # Rhythm
+          id == "Neural DSP Nolly 4"         ~ "High Gain", # Lead
+          id == "Neural DSP Plini 1"         ~ "Clean",
+          id == "Neural DSP Plini 2"         ~ "Mid Gain",
+          id == "Neural DSP Plini 3"         ~ "High Gain",
+          id == "Neural DSP TimHenson 1"     ~ "Acoustic/Other",
+          id == "Neural DSP TimHenson 2"     ~ "Low Gain",
+          id == "Neural DSP TimHenson 3"     ~ "Mid Gain",
+          id == "STL Tonality 1_6L6"         ~ "High Gain",
+          id == "STL Tonality 1_EL34"        ~ "High Gain",
+          id == "STL Tonality 1_KT88"        ~ "High Gain",
+          id == "STL Tonality 2_6L6"         ~ "High Gain",
+          id == "STL Tonality 2_EL34"        ~ "High Gain",
+          id == "STL Tonality 2_KT88"        ~ "High Gain",
+          id == "STL Tonality 3_6L6"         ~ "High Gain",
+          id == "STL Tonality 3_EL34"        ~ "High Gain",
+          id == "STL Tonality 3_KT88"        ~ "High Gain",
+          id == "STL Tonality 4_6L6"         ~ "High Gain",
+          id == "STL Tonality 4_EL34"        ~ "Mid Gain",
+          id == "STL Tonality 4_KT77"        ~ "Mid Gain",
+          id == "STL Tonality 4_KT88"        ~ "Mid Gain"))
 
-#------------- Draw summary graphics --------------
+#------------- Produce summary graphics/numbers --------------
 
 # Low gain vs high gain per cluster
 
-xx
+p1 <- k_labels %>%
+  group_by(.cluster, amp_type) %>%
+  summarise(num_amps = n()) %>%
+  mutate(.cluster = ifelse(.cluster == 1, "Cluster 1", "Cluster 2")) %>%
+  group_by(.cluster) %>%
+  mutate(props = num_amps / sum(num_amps)) %>%
+  ungroup() %>%
+  ggplot(aes(x = amp_type, y = num_amps)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Amplifier Type",
+       y = "Number of Amplifiers") +
+  theme_bw() +
+  theme(panel.grid.minor = element_blank(),
+        axis.text.x = element_text(angle = 90),
+        strip.background = element_blank()) +
+  facet_wrap(~ .cluster, ncol = 2, nrow = 1)
+
+print(p1)
+ggsave("output/k-gain.png", p1, units = "in", width = 6, height = 6)
+ggsave("report/k-gain.pdf", p1, units = "in", width = 6, height = 6)
 
 # Brand per cluster
 
-xx
+brand <- k_labels %>%
+  group_by(.cluster, group) %>%
+  summarise(num_amps = n()) %>%
+  mutate(.cluster = ifelse(.cluster == 1, "Cluster 1", "Cluster 2")) %>%
+  group_by(.cluster) %>%
+  mutate(props = num_amps / sum(num_amps)) %>%
+  ungroup()
