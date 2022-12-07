@@ -23,9 +23,9 @@ wide_data <- feat_mat %>%
   pivot_wider(id_cols = "id", names_from = "names", values_from = "values") %>%
   column_to_rownames(var = "id")
 
-#------------- k-means modelling --------------
+#------------- Fit k-means models --------------
 
-# Fit k-means models over the range of 1 <= k <= 9
+# Fit k-means models over the range of 1 <= k <= 9 as we are unsure what the "right" k is
 
 kclusts <-
   tibble(k = 1:9) %>%
@@ -36,7 +36,7 @@ kclusts <-
     augmented = map(kclust, augment, wide_data)
   )
 
-#------------- Extracting results --------------
+#------------- Extract results --------------
 
 # Extract separate results using tidy approach presented in https://www.tidymodels.org/learn/statistics/k-means/
 
@@ -67,7 +67,7 @@ print(p)
 ggsave("output/k-elbow.png", p, units = "in", width = 6, height = 6)
 ggsave("report/k-elbow.pdf", p, units = "in", width = 6, height = 6)
 
-#------------- Determining cluster membership --------------
+#------------- Determine cluster membership --------------
 
 # k-means finds k = 2 as the best in terms of total within sums of squares, so we can apply labels to original data
 
@@ -112,6 +112,6 @@ k_labels <- k_labels %>%
           id == "" ~ "",
           id == "" ~ ""))
 
-#------------- Drawing summary graphics --------------
+#------------- Draw summary graphics --------------
 
 
