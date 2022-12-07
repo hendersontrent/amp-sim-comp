@@ -9,12 +9,15 @@
 #----------------------------------------
 
 library(data.table)
+library(tibble)
 library(dplyr)
 library(tidyr)
+library(purrr)
 library(readr)
 library(stringr)
 library(ggplot2)
 library(ggrepel)
+library(broom)
 library(tuneR)
 library(R.matlab)
 library(theft)
