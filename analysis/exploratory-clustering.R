@@ -81,37 +81,43 @@ k_labels <- assignments %>%
 
 k_labels <- k_labels %>%
   mutate(amp_type = case_when(
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ "",
-          id == "" ~ ""))
+          id == "Neural DSP CoryWong 1"      ~ "",
+          id == "Neural DSP CoryWong 2"      ~ "",
+          id == "Neural DSP CoryWong 3"      ~ "",
+          id == "Neural DSP Fortin Nameless" ~ "",
+          id == "Neural DSP Gojira 1"        ~ "",
+          id == "Neural DSP Gojira 2"        ~ "",
+          id == "Neural DSP Gojira 3"        ~ "",
+          id == "Neural DSP Nolly 1"         ~ "",
+          id == "Neural DSP Nolly 2"         ~ "",
+          id == "Neural DSP Nolly 3"         ~ "",
+          id == "Neural DSP Nolly 4"         ~ "",
+          id == "Neural DSP Plini 1"         ~ "",
+          id == "Neural DSP Plini 2"         ~ "",
+          id == "Neural DSP Plini 3"         ~ "",
+          id == "Neural DSP TimHenson 1"     ~ "",
+          id == "Neural DSP TimHenson 2"     ~ "",
+          id == "Neural DSP TimHenson 3"     ~ "",
+          id == "STL Tonality 1_6L6"         ~ "",
+          id == "STL Tonality 1_EL34"        ~ "",
+          id == "STL Tonality 1_KT88"        ~ "",
+          id == "STL Tonality 2_6L6"         ~ "",
+          id == "STL Tonality 2_EL34"        ~ "",
+          id == "STL Tonality 2_KT88"        ~ "",
+          id == "STL Tonality 3_6L6"         ~ "",
+          id == "STL Tonality 3_EL34"        ~ "",
+          id == "STL Tonality 3_KT88"        ~ "",
+          id == "STL Tonality 4_6L6"         ~ "",
+          id == "STL Tonality 4_EL3"         ~ "",
+          id == "STL Tonality 4_EL3"         ~ "",
+          id == "STL Tonality 4_KT88"        ~ ""))
 
 #------------- Draw summary graphics --------------
 
+# Low gain vs high gain per cluster
 
+xx
+
+# Brand per cluster
+
+xx
