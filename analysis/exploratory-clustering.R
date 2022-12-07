@@ -142,8 +142,8 @@ p1 <- k_labels %>%
   ungroup() %>%
   ggplot(aes(x = amp_type, y = num_amps)) +
   geom_bar(stat = "identity") +
-  labs(x = "Amplifier Type",
-       y = "Number of Amplifiers") +
+  labs(x = "Amplifier type",
+       y = "Number of amplifiers") +
   theme_bw() +
   theme(panel.grid.minor = element_blank(),
         axis.text.x = element_text(angle = 90),
