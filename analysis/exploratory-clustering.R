@@ -21,7 +21,7 @@ load("data/features/feat_mat.Rda")
 wide_data <- feat_mat %>%
   dplyr::select(c(id, names, values)) %>%
   pivot_wider(id_cols = "id", names_from = "names", values_from = "values") %>%
-  select(-c(id))
+  column_to_rownames(var = "id")
 
 #------------- k-means modelling --------------
 
@@ -49,7 +49,7 @@ assignments <- kclusts %>%
 clusterings <- kclusts %>%
   unnest(cols = c(glanced))
 
-# Use elbow method over total within sums of squares to determine optimal k
+# Use elbow method over total within sums of squares (i.e., variance within clusters) to determine optimal k
 
 p <- clusterings %>%
   ggplot(aes(x = k, y = tot.withinss)) +
@@ -64,3 +64,13 @@ p <- clusterings %>%
   theme(panel.grid.minor = element_blank())
 
 print(p)
+
+#------------- Determining cluster membership --------------
+
+# k-means finds k = 2 as the best in terms of total within sums of squares, so we can apply labels to original data
+
+k_labels <- assignments %>%
+  filter(k == 2) %>%
+  mutate(id = rownames(wide_data)) %>%
+  mutate(group = ifelse(grepl("Neural", id), "Neural DSP", "STL Tonality")) %>%
+  dplyr::select(c(id, group, .cluster))
