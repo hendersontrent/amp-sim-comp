@@ -70,6 +70,6 @@ print(p1)
 # Save plots
 
 ggsave("output/catch22-low-dim.png", p, units = "in", width = 6, height = 6)
-ggsave("report/catch22-low-dim.png", p, units = "in", width = 6, height = 6)
+ggsave("report/catch22-low-dim.pdf", p, units = "in", width = 6, height = 6)
 ggsave("output/catch22-low-dim-tsne.png", p1, units = "in", width = 6, height = 6)
-ggsave("report/catch22-low-dim-tsne.png", p1, units = "in", width = 6, height = 6)
+ggsave("report/catch22-low-dim-tsne.pdf", p1, units = "in", width = 6, height = 6)

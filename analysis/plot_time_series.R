@@ -54,8 +54,8 @@ p2 <- plot_time_series(data = amplifiers, t1 = max(amplifiers$timepoint) - 1000,
 # Save plots
 
 ggsave("output/time-series.png", p, units = "in", height = 8, width = 8)
-ggsave("report/time-series.png", p, units = "in", height = 8, width = 8)
+ggsave("report/time-series.pdf", p, units = "in", height = 8, width = 8)
 ggsave("output/time-series2.png", p1, units = "in", height = 8, width = 8)
-ggsave("report/time-series2.png", p1, units = "in", height = 8, width = 8)
+ggsave("report/time-series2.pdf", p1, units = "in", height = 8, width = 8)
 ggsave("output/time-series3.png", p2, units = "in", height = 8, width = 8)
-ggsave("report/time-series3.png", p2, units = "in", height = 8, width = 8)
+ggsave("report/time-series3.pdf", p2, units = "in", height = 8, width = 8)
