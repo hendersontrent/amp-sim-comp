@@ -120,6 +120,17 @@ k_labels <- k_labels %>%
 
 #------------- Produce summary graphics/numbers --------------
 
+# Summary table of amplifiers
+
+amp_list <- k_labels %>%
+  dplyr::select(-c(group)) %>%
+  arrange(.cluster) %>%
+  rename(`Amplifier Name` = id,
+         Cluster = .cluster,
+         `Amplifier Type` = amp_type)
+
+xtable::xtable(amp_list) # For LaTeX report
+
 # Low gain vs high gain per cluster
 
 p1 <- k_labels %>%
