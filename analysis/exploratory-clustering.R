@@ -52,11 +52,12 @@ clusterings <- kclusts %>%
 # Use elbow method over total within sums of squares (i.e., variance within clusters) to determine optimal k
 
 p <- clusterings %>%
-  ggplot(aes(x = k, y = tot.withinss)) +
+  mutate(props = betweenss / totss) %>%
+  ggplot(aes(x = k, y = props)) +
   geom_line(size = 0.8) +
   geom_point(size = 2) +
   labs(x = "k",
-       y = "Total within sums-of-squares") +
+       y = "Proportion of total SS explained by between cluster SS") +
   scale_x_continuous(limits = c(1, 9),
                      breaks = seq(from = 1, to = 9, by = 1),
                      labels = seq(from = 1, to = 9, by = 1)) +
@@ -69,10 +70,10 @@ ggsave("report/k-elbow.pdf", p, units = "in", width = 6, height = 6)
 
 #------------- Determine cluster membership --------------
 
-# k-means finds k = 2 as the best in terms of total within sums of squares, so we can apply labels to original data
+# k-means finds k = 3 as the best in terms of total within sums of squares, so we can apply labels to original data
 
 k_labels <- assignments %>%
-  filter(k == 2) %>%
+  filter(k == 3) %>%
   mutate(id = rownames(wide_data)) %>%
   mutate(group = ifelse(grepl("Neural", id), "Neural DSP", "STL Tonality")) %>%
   dplyr::select(c(id, group, .cluster))
@@ -136,7 +137,7 @@ xtable::xtable(amp_list) # For LaTeX report
 p1 <- k_labels %>%
   group_by(.cluster, amp_type) %>%
   summarise(num_amps = n()) %>%
-  mutate(.cluster = ifelse(.cluster == 1, "Cluster 1", "Cluster 2")) %>%
+  mutate(.cluster = paste0("Cluster ", .cluster)) %>%
   group_by(.cluster) %>%
   mutate(props = num_amps / sum(num_amps)) %>%
   ungroup() %>%
@@ -148,7 +149,7 @@ p1 <- k_labels %>%
   theme(panel.grid.minor = element_blank(),
         axis.text.x = element_text(angle = 90),
         strip.background = element_blank()) +
-  facet_wrap(~ .cluster, ncol = 2, nrow = 1)
+  facet_wrap(~ .cluster, ncol = 3, nrow = 1)
 
 print(p1)
 ggsave("output/k-gain.png", p1, units = "in", width = 6, height = 6)
@@ -159,7 +160,7 @@ ggsave("report/k-gain.pdf", p1, units = "in", width = 6, height = 6)
 brand <- k_labels %>%
   group_by(.cluster, group) %>%
   summarise(num_amps = n()) %>%
-  mutate(.cluster = ifelse(.cluster == 1, "Cluster 1", "Cluster 2")) %>%
+  mutate(.cluster = paste0("Cluster ", .cluster)) %>%
   group_by(.cluster) %>%
   mutate(props = num_amps / sum(num_amps)) %>%
   ungroup()
