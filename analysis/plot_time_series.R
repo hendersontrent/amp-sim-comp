@@ -15,40 +15,47 @@
 
 load("data/raw-signals-numeric/amplifiers.Rda")
 
-# Produce graphic
+#------------- Draw plots -------------
 
-p <- amplifiers %>%
-  ggplot(aes(x = timepoint, y = amplitude, colour = group)) +
-  geom_line() +
-  labs(title = "Time Series of Amplitude by Amplifier",
-       x = "Time",
-       y = "Amplitude",
-       colour = NULL) +
-  scale_colour_brewer(palette = "Dark2") +
-  theme(legend.position = "none",
-        axis.text.x = element_blank()) +
-  facet_wrap(~id)
+#' Draw time series plots for each plugin
+#' @param data the dataframe of time series values
+#' @param t1 the first timepoint to plot from
+#' @param t2 the last timepoint to plot to
+#' @return an object of class \code{ggplot2}
+#' @author Trent Henderson
+#'
 
-print(p)
+plot_time_series <- function(data, t1, t2){
 
-# Produce graphic for random 1000 timepoints
+  p <- amplifiers %>%
+    filter(timepoint %in% seq(from = t1, to = t2, by = 1)) %>%
+    ggplot(aes(x = timepoint, y = amplitude, colour = id)) +
+    geom_line() +
+    labs(x = "Time",
+         y = "Amplitude",
+         colour = NULL) +
+    theme_bw() +
+    theme(legend.position = "none",
+          panel.grid.minor = element_blank(),
+          strip.background = element_blank(),
+          strip.text = element_text(face = "bold"),
+          axis.text.x = element_text(angle = 90)) +
+    facet_wrap(~id, ncol = 3, scales = "free_y")
 
-p1 <- amplifiers %>%
-  filter(timepoint >= 10000 & timepoint <= 11000) %>%
-  ggplot(aes(x = timepoint, y = amplitude, colour = group)) +
-  geom_line() +
-  labs(title = "Time Series of Amplitude by Amplifier",
-       x = "Time",
-       y = "Amplitude",
-       colour = NULL) +
-  scale_colour_brewer(palette = "Dark2") +
-  theme(legend.position = "none",
-        axis.text.x = element_blank()) +
-  facet_wrap(~id)
+  return(p)
+}
 
-print(p1)
+# Render them
+
+p <- plot_time_series(data = amplifiers, t1 = 1, t2 = 1000)
+p1 <- plot_time_series(data = amplifiers, t1 = 400000, t2 = 400050)
+p2 <- plot_time_series(data = amplifiers, t1 = max(amplifiers$timepoint) - 1000, t2 = max(amplifiers$timepoint))
 
 # Save plots
 
-ggsave("output/time-series.png", p)
-ggsave("output/time-series-random-1000.png", p1)
+ggsave("output/time-series.png", p, units = "in", height = 8, width = 8)
+ggsave("report/time-series.pdf", p, units = "in", height = 8, width = 8)
+ggsave("output/time-series2.png", p1, units = "in", height = 8, width = 8)
+ggsave("report/time-series2.pdf", p1, units = "in", height = 8, width = 8)
+ggsave("output/time-series3.png", p2, units = "in", height = 8, width = 8)
+ggsave("report/time-series3.pdf", p2, units = "in", height = 8, width = 8)

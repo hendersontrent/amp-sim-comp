@@ -1,8 +1,6 @@
 #' Produce a principal components analysis (PCA) on normalised feature values and render a bivariate plot to visualise it
-#' NOTE: This is the {theft} source code but slight modified. See https://github.com/hendersontrent/theft/blob/main/R/plot_low_dimension.R
-#'
+#' @importFrom rlang .data
 #' @import dplyr
-#' @importFrom magrittr %>%
 #' @import ggplot2
 #' @import tibble
 #' @importFrom tidyr drop_na
@@ -11,62 +9,62 @@
 #' @importFrom stats prcomp
 #' @importFrom ggrepel geom_label_repel
 #' @import Rtsne
-#' @param data a dataframe with at least 2 columns called 'names' and 'values'
-#' @param is_normalised a Boolean as to whether the input feature values have already been scaled. Defaults to FALSE
-#' @param id_var a string specifying the ID variable to group data on (if one exists). Defaults to "id"
-#' @param group_var a string specifying the grouping variable that the data aggregates to. Defaults to "group"
-#' @param method a rescaling/normalising method to apply. Defaults to 'RobustSigmoid'
-#' @param low_dim_method the low dimensional embedding method to use. Defaults to 'PCA'
-#' @param perplexity the perplexity hyperparameter to use if t-SNE algorithm is selected. Defaults to 30
-#' @param plot a Boolean as to whether a bivariate plot should be returned or the calculation dataframe. Defaults to TRUE
-#' @param show_covariance a Boolean as to whether covariance ellipses should be shown on the plot. Defaults to FALSE
-#' @return if plot = TRUE, returns an object of class ggplot, if plot = FALSE returns an object of class dataframe with PCA results
+#' @param data a dataframe with at least 2 columns called \code{"names"} and \code{"values"}
+#' @param is_normalised a Boolean as to whether the input feature values have already been scaled. Defaults to \code{FALSE}
+#' @param id_var a string specifying the ID variable to uniquely identify each time series. Defaults to \code{"id"}
+#' @param group_var a string specifying the grouping variable that the data aggregates to (if one exists). Defaults to \code{NULL}
+#' @param method a rescaling/normalising method to apply. Defaults to \code{"z-score"}
+#' @param low_dim_method the low dimensional embedding method to use. Defaults to \code{"PCA"}
+#' @param perplexity the perplexity hyperparameter to use if t-SNE algorithm is selected. Defaults to \code{30}
+#' @param plot a Boolean as to whether a plot or model fit information should be returned. Defaults to \code{TRUE}
+#' @param show_covariance a Boolean as to whether covariance ellipses should be shown on the plot. Defaults to \code{FALSE}
+#' @param seed fixed number for R's random number generator to ensure reproducibility
+#' @return if \code{plot = TRUE}, returns an object of class \code{ggplot}, if \code{plot = FALSE} returns an object of class dataframe with PCA results
 #' @author Trent Henderson
-#' @export
-#' @examples
-#' \dontrun{
-#' featMat <- calculate_features(data = simData,
-#'   id_var = "id",
-#'   time_var = "timepoint",
-#'   values_var = "values",
-#'   group_var = "process",
-#'   feature_set = "catch22")
-#'
-#' plot_low_dimension(featMat,
-#'   is_normalised = FALSE,
-#'   id_var = "id",
-#'   group_var = "State",
-#'   method = "RobustSigmoid",
-#'   low_dim_method = "PCA",
-#'   plot = TRUE,
-#'   show_covariance = TRUE)
-#' }
 #'
 
-plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", group_var = "group",
+plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", group_var = NULL,
                                method = c("z-score", "Sigmoid", "RobustSigmoid", "MinMax"),
                                low_dim_method = c("PCA", "t-SNE"), perplexity = 30,
-                               plot = TRUE, show_covariance = FALSE){
+                               plot = TRUE, show_covariance = FALSE, seed = 123){
 
-  # Make RobustSigmoid the default
+  # Set defaults
 
   if(missing(method)){
-    method <- "RobustSigmoid"
+    method <- "z-score"
+    message("No method specified. Specifying 'z-score' as default")
   } else{
     method <- match.arg(method)
   }
 
+  if(missing(low_dim_method)){
+    low_dim_method <- "PCA"
+    message("No low_dim_method specified. Specifying 'PCA' as default")
+  } else{
+    low_dim_method <- match.arg(low_dim_method)
+  }
+
+  if(missing(id_var)){
+    id_var <- "id"
+    message("No id_var specified. Specifying 'id' as default as returned in theft::calculate_features")
+  }
+
   expected_cols_1 <- "names"
   expected_cols_2 <- "values"
+  expected_cols_3 <- "method"
   the_cols <- colnames(data)
   '%ni%' <- Negate('%in%')
 
   if(expected_cols_1 %ni% the_cols){
-    stop("data should contain at least two columns called 'names' and 'values'. These are automatically produced by feature calculations such as calculate_features(). Please consider running one of these first and then passing the resultant dataframe in to this function.")
+    stop("data should contain at least three columns called 'names', 'values', and 'method'. These are automatically produced by theft::calculate_features. Please run this first and then pass the resultant dataframe to this function.")
   }
 
   if(expected_cols_2 %ni% the_cols){
-    stop("data should contain at least two columns called 'names' and 'values'. These are automatically produced by feature calculations such as calculate_features(). Please consider running one of these first and then passing the resultant dataframe in to this function.")
+    stop("data should contain at least three columns called 'names', 'values', and 'method'. These are automatically produced by theft::calculate_features. Please run this first and then pass the resultant dataframe to this function.")
+  }
+
+  if(expected_cols_3 %ni% the_cols){
+    stop("data should contain at least three columns called 'names', 'values', and 'method'. These are automatically produced by theft::calculate_features. Please run this first and then pass the resultant dataframe to this function.")
   }
 
   if(!is.numeric(data$values)){
@@ -109,6 +107,13 @@ plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", grou
     stop("perplexity should be an integer number, typically between 2 and 100.")
   }
 
+  # Seed
+
+  if(is.null(seed) || missing(seed)){
+    seed <- 123
+    message("No argument supplied to seed, using 123 as default.")
+  }
+
   #------------- Assign ID variable ---------------
 
   if(is.null(id_var)){
@@ -127,12 +132,15 @@ plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", grou
   } else{
 
     normed <- data_id %>%
-      dplyr::select(c(id, names, values)) %>%
+      dplyr::rename(feature_set = .data$method) %>% # Avoids issues with method arg later
+      dplyr::select(c(.data$id, .data$names, .data$values, .data$feature_set)) %>%
       tidyr::drop_na() %>%
-      dplyr::group_by(names) %>%
-      dplyr::mutate(values = normalise_feature_vector(values, method = method)) %>%
+      dplyr::group_by(.data$names) %>%
+      dplyr::mutate(values = normalise_feature_vector(.data$values, method = method)) %>%
       dplyr::ungroup() %>%
-      tidyr::drop_na()
+      tidyr::drop_na() %>%
+      dplyr::mutate(names = paste0(.data$feature_set, "_", .data$names)) %>% # Catches errors when using all features across sets (i.e., there's duplicates)
+      dplyr::select(-c(feature_set))
 
     if(nrow(normed) != nrow(data_id)){
       message("Filtered out rows containing NaNs.")
@@ -141,13 +149,10 @@ plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", grou
 
   #------------- Perform low dim ----------------------
 
-  # Produce matrix and z-score for PCA stability
+  # Produce matrix
 
   dat_filtered <- normed %>%
-    dplyr::group_by(names) %>%
-    dplyr::mutate(values = normalise_feature_vector(values, method = "z-score")) %>%
-    dplyr::ungroup() %>%
-    tidyr::pivot_wider(id_cols = id, names_from = names, values_from = values) %>%
+    tidyr::pivot_wider(id_cols = "id", names_from = "names", values_from = "values") %>%
     tibble::column_to_rownames(var = "id") %>%
     tidyr::drop_na()
 
@@ -155,7 +160,7 @@ plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", grou
 
     # PCA calculation
 
-    set.seed(123)
+    set.seed(seed)
 
     fits <- dat_filtered %>%
       stats::prcomp(scale = FALSE)
@@ -164,23 +169,30 @@ plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", grou
 
     eigens <- fits %>%
       broom::tidy(matrix = "eigenvalues") %>%
-      dplyr::filter(PC %in% c(1,2)) %>% # Filter to just the 2 going in the plot
-      dplyr::select(c(PC, percent)) %>%
-      dplyr::mutate(percent = round(percent*100), digits = 1)
+      dplyr::filter(.data$PC %in% c(1, 2)) %>% # Filter to just the 2 going in the plot
+      dplyr::select(c(.data$PC, .data$percent)) %>%
+      dplyr::mutate(percent = round(.data$percent * 100), digits = 1)
 
     eigen_pc1 <- eigens %>%
-      dplyr::filter(PC == 1)
+      dplyr::filter(.data$PC == 1)
 
     eigen_pc2 <- eigens %>%
-      dplyr::filter(PC == 2)
+      dplyr::filter(.data$PC == 2)
 
     eigen_pc1 <- paste0(eigen_pc1$percent,"%")
     eigen_pc2 <- paste0(eigen_pc2$percent,"%")
+
   } else{
 
-    # tSNE calculation
+    # Check perplexity
 
-    set.seed(123)
+    if(perplexity >= nrow(dat_filtered)){
+      stop("perplexity must be < number of unique IDs.")
+    }
+
+    # t-SNE calculation
+
+    set.seed(seed)
 
     tsneOut <- Rtsne::Rtsne(as.matrix(dat_filtered), perplexity = perplexity, max_iter = 5000, dims = 2,
                             check_duplicates = FALSE)
@@ -189,7 +201,7 @@ plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", grou
 
     id_ref <- dat_filtered %>%
       tibble::rownames_to_column(var = "id") %>%
-      dplyr::select(c(id))
+      dplyr::select(c(.data$id))
 
     fits <- data.frame(.fitted1 = tsneOut$Y[,1],
                        .fitted2 = tsneOut$Y[,2]) %>%
@@ -207,22 +219,24 @@ plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", grou
       if(low_dim_method == "PCA"){
         fits <- fits %>%
           broom::augment(dat_filtered) %>%
-          dplyr::rename(id = `.rownames`) %>%
-          dplyr::mutate(id = as.factor(id)) %>%
-          dplyr::rename(.fitted1 = .fittedPC1,
-                        .fitted2 = .fittedPC2)
+          dplyr::rename(id = 1) %>%
+          dplyr::mutate(id = as.factor(.data$id)) %>%
+          dplyr::rename(.fitted1 = .data$.fittedPC1,
+                        .fitted2 = .data$.fittedPC2)
       } else{
         fits <- fits %>%
-          dplyr::mutate(id = as.factor(id))
+          dplyr::mutate(id = as.factor(.data$id))
       }
+
+      data_id <- as.data.frame(lapply(data_id, unlist)) # Catch weird cases where it's a list...
 
       groups <- data_id %>%
         dplyr::rename(group_id = dplyr::all_of(group_var)) %>%
-        dplyr::group_by(id, group_id) %>%
+        dplyr::group_by(.data$id, .data$group_id) %>%
         dplyr::summarise(counter = dplyr::n()) %>%
         dplyr::ungroup() %>%
-        dplyr::select(-c(counter)) %>%
-        dplyr::mutate(id = as.factor(id))
+        dplyr::select(-c(.data$counter)) %>%
+        dplyr::mutate(id = as.factor(.data$id))
 
       fits <- fits %>%
         dplyr::inner_join(groups, by = c("id" = "id"))
@@ -230,45 +244,41 @@ plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", grou
       # Draw plot
 
       p <- fits %>%
-        dplyr::mutate(group_id = as.factor(group_id)) %>%
-        ggplot2::ggplot(ggplot2::aes(x = .fitted1, y = .fitted2))
+        dplyr::mutate(group_id = as.factor(.data$group_id)) %>%
+        ggplot2::ggplot(ggplot2::aes(x = .data$.fitted1, y = .data$.fitted2))
 
       if(show_covariance){
         p <- p +
-          ggplot2::stat_ellipse(ggplot2::aes(x = .fitted1, y = .fitted2, fill = group_id), geom = "polygon", alpha = 0.2) +
-          ggplot2::guides(fill = FALSE)
+          ggplot2::stat_ellipse(ggplot2::aes(x = .data$.fitted1, y = .data$.fitted2, fill = .data$group_id), geom = "polygon", alpha = 0.2) +
+          ggplot2::guides(fill = "none")
       } else{
 
       }
 
       if(nrow(fits) > 200){
         p <- p +
-          ggplot2::geom_point(size = 1.5, ggplot2::aes(colour = group_id))
+          ggplot2::geom_point(size = 1.5, ggplot2::aes(colour = .data$group_id))
       } else{
         p <- p +
-          ggplot2::geom_point(size = 2.5, ggplot2::aes(colour = group_id))
+          ggplot2::geom_point(size = 2.25, ggplot2::aes(colour = .data$group_id))
       }
 
       if(low_dim_method == "PCA"){
         p <- p +
-          ggplot2::labs(title = "Low dimensional projection of time series",
-                        x = paste0("PC 1"," (",eigen_pc1,")"),
-                        y = paste0("PC 2"," (",eigen_pc2,")"),
+          ggplot2::labs(x = paste0("PC 1"," (", eigen_pc1, ")"),
+                        y = paste0("PC 2"," (", eigen_pc2, ")"),
                         colour = NULL) +
-          ggplot2::theme_gray() +
-          ggrepel::geom_label_repel(aes(label = id, colour = group_id), size = 2.5, fontface = "bold") +
-          ggplot2::theme(legend.position = "none",
-                         legend.key = ggplot2::element_blank())
+          ggplot2::theme_bw() +
+          ggrepel::geom_label_repel(aes(label = id, colour = group_id), size = 2.5, fontface = "bold", max.overlaps = Inf) +
+          ggplot2::theme(legend.position = "none")
       } else{
         p <- p +
-          ggplot2::labs(title = "Low dimensional projection of time series",
-                        x = "Dimension 1",
+          ggplot2::labs(x = "Dimension 1",
                         y = "Dimension 2",
                         colour = NULL) +
-          ggplot2::theme_gray() +
-          ggrepel::geom_label_repel(aes(label = id, colour = group_id), size = 2.5, fontface = "bold") +
-          ggplot2::theme(legend.position = "none",
-                         legend.key = ggplot2::element_blank())
+          ggplot2::theme_bw() +
+          ggrepel::geom_label_repel(aes(label = id, colour = group_id), size = 2.5, fontface = "bold", max.overlaps = Inf) +
+          ggplot2::theme(legend.position = "none")
       }
     }
 
@@ -277,17 +287,17 @@ plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", grou
       if(low_dim_method == "PCA"){
         fits <- fits %>%
           broom::augment(dat_filtered) %>%
-          dplyr::rename(id = `.rownames`) %>%
+          dplyr::rename(id = 1) %>%
           dplyr::mutate(id = as.factor(id)) %>%
-          dplyr::rename(.fitted1 = .fittedPC1,
-                        .fitted2 = .fittedPC2)
+          dplyr::rename(.fitted1 = .data$.fittedPC1,
+                        .fitted2 = .data$.fittedPC2)
       } else{
         fits <- fits %>%
-          dplyr::mutate(id = as.factor(id))
+          dplyr::mutate(id = as.factor(.data$id))
       }
 
       p <- fits %>%
-        ggplot2::ggplot(ggplot2::aes(x = .fitted1, y = .fitted2))
+        ggplot2::ggplot(ggplot2::aes(x = .data$.fitted1, y = .data$.fitted2))
 
       if(nrow(fits) > 200){
         p <- p +
@@ -299,26 +309,22 @@ plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", grou
 
       if(low_dim_method == "PCA"){
         p <- p +
-          ggplot2::labs(title = "Low dimensional projection of time series",
-                        x = paste0("PC 1"," (",eigen_pc1,")"),
-                        y = paste0("PC 2"," (",eigen_pc2,")")) +
-          ggplot2::theme_bw() +
-          ggplot2::theme(panel.grid.minor = ggplot2::element_blank())
+          ggplot2::labs(x = paste0("PC 1"," (", eigen_pc1, ")"),
+                        y = paste0("PC 2"," (", eigen_pc2, ")")) +
+          ggrepel::geom_label_repel(aes(label = id, colour = group_id), size = 2.5, fontface = "bold")
       } else{
         p <- p +
-          ggplot2::labs(title = "Low dimensional projection of time series",
-                        x = "Dimension 1",
+          ggplot2::labs(x = "Dimension 1",
                         y = "Dimension 2") +
-          ggplot2::theme_bw() +
-          ggplot2::theme(panel.grid.minor = ggplot2::element_blank())
+          ggplot2::theme_bw()
       }
     }
   } else{
 
     if(low_dim_method == "PCA"){
       p <- fits %>%
-        broom::augment(dat_filtered) %>%
-        dplyr::rename(id = `.rownames`)
+        broom::tidy(matrix = "eigenvalues") %>%
+        dplyr::select(c(.data$PC, .data$percent))
     } else{
       p <- fits
     }

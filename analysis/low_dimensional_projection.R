@@ -5,7 +5,8 @@
 # matrix
 #
 # NOTE: This script requires setup.R and
-# analysis/catch22.R to have been run first
+# analysis/catch22.R to have been run
+# first
 #----------------------------------------
 
 #----------------------------------------
@@ -14,13 +15,13 @@
 
 # Load feature matrix
 
-load("data/features/featMat_catch22.Rda")
+load("data/features/feat_mat.Rda")
 
 #------------- Preprocessing ---------------
 
 # Fix names and adjust meta-groupings for colours on the plot
 
-featMat_catch22_clean <- featMat_catch22 %>%
+feat_mat_clean <- feat_mat %>%
   mutate(id = case_when(
           id == "STL_Tonality 1_6L6"  ~ "STL Tonality 1_6L6",
           id == "STL_Tonality 1_KT88" ~ "STL Tonality 1_KT88",
@@ -37,26 +38,38 @@ featMat_catch22_clean <- featMat_catch22 %>%
 
 #------------- Produce graphics ------------
 
-#------
-# t-SNE
-#------
+# PCA
 
-source("R/plot_low_dimension2.R") # As original {theft function only has 8 colours and we want slight different aesthetics}
-
-p <- plot_low_dimension2(featMat_catch22_clean,
+p <- plot_low_dimension2(feat_mat_clean,
                          is_normalised = FALSE,
                          id_var = "id",
                          group_var = "amplifier",
                          low_dim_method = "PCA",
                          method = "z-score",
                          plot = TRUE,
-                         show_covariance = FALSE) +
-  labs(title = "Low dimensional projection of amplifier head time-series features using PCA",
-       subtitle = str_wrap("Each point is the amplitude time series of a 20Hz-20kHz sine sweep passed through each amplifier head with all settings at noon and all effects/cabs/additional EQ turned off. A set of 22 statistical features was then calculated on the time x amplitude vector for each head and passed into a principal components analysis for projection onto a 2-D plot. STL Tonality is Will Putney plugin only.", width = 120),
-       caption = "Analysis: Trent Henderson. Source code: https://github.com/hendersontrent/amp-sim-comp")
+                         show_covariance = FALSE,
+                         seed = 123)
 
 print(p)
 
-# Save plot
+# t-SNE
 
-ggsave("output/catch22-low-dim.png", p, units = "in", width = 10, height = 9.5)
+p1 <- plot_low_dimension2(feat_mat_clean,
+                          is_normalised = FALSE,
+                          id_var = "id",
+                          group_var = "amplifier",
+                          low_dim_method = "t-SNE",
+                          method = "z-score",
+                          perplexity = 5,
+                          plot = TRUE,
+                          show_covariance = FALSE,
+                          seed = 123)
+
+print(p1)
+
+# Save plots
+
+ggsave("output/catch22-low-dim.png", p, units = "in", width = 6, height = 6)
+ggsave("report/catch22-low-dim.pdf", p, units = "in", width = 6, height = 6)
+ggsave("output/catch22-low-dim-tsne.png", p1, units = "in", width = 6, height = 6)
+ggsave("report/catch22-low-dim-tsne.pdf", p1, units = "in", width = 6, height = 6)
