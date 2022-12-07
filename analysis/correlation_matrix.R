@@ -24,7 +24,7 @@ p <- plot_ts_correlations2(amplifiers,
                            id_var = "id",
                            time_var = "timepoint",
                            values_var = "amplitude",
-                           cor_method = "pearson",
+                           cor_method = "spearman",
                            clust_method = "average",
                            interactive = FALSE)
 
@@ -32,7 +32,7 @@ print(p)
 
 # Draw feature vector corr plot
 
-p1 <- plot_vector_corrs(data = feat_mat, clust_method = "average", cor_method = "pearson")
+p1 <- plot_vector_corrs(data = feat_mat, clust_method = "average", cor_method = "spearman")
 print(p1)
 
 #-------------------- Time series x Feature plot ------------------
