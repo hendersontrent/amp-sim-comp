@@ -128,7 +128,7 @@ amp_list <- k_labels %>%
   arrange(.cluster) %>%
   rename(`Amplifier Name` = id,
          Cluster = .cluster,
-         `Amplifier Type` = amp_type)
+         `Gain Structure` = amp_type)
 
 xtable::xtable(amp_list) # For LaTeX report
 
