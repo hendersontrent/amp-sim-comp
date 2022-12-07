@@ -64,6 +64,8 @@ p <- clusterings %>%
   theme(panel.grid.minor = element_blank())
 
 print(p)
+ggsave("output/k-elbow.png", p, units = "in", width = 6, height = 6)
+ggsave("report/k-elbow.pdf", p, units = "in", width = 6, height = 6)
 
 #------------- Determining cluster membership --------------
 
@@ -74,3 +76,42 @@ k_labels <- assignments %>%
   mutate(id = rownames(wide_data)) %>%
   mutate(group = ifelse(grepl("Neural", id), "Neural DSP", "STL Tonality")) %>%
   dplyr::select(c(id, group, .cluster))
+
+# Add in some qualitative labels of amplifier type
+
+k_labels <- k_labels %>%
+  mutate(amp_type = case_when(
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ "",
+          id == "" ~ ""))
+
+#------------- Drawing summary graphics --------------
+
+
