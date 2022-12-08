@@ -82,9 +82,10 @@ k_labels <- assignments %>%
 # Summary table of amplifiers
 
 amp_list <- k_labels %>%
-  dplyr::select(-c(group)) %>%
+  dplyr::select(c(id, plugin, .cluster, amp_type)) %>%
   arrange(.cluster) %>%
   rename(`Amplifier Name` = id,
+         Plugin = plugin,
          Cluster = .cluster,
          `Gain Structure` = amp_type)
 
@@ -116,7 +117,7 @@ ggsave("report/k-gain.pdf", p1, units = "in", width = 6, height = 6)
 # Brand per cluster
 
 brand <- k_labels %>%
-  group_by(.cluster, group) %>%
+  group_by(.cluster, brand) %>%
   summarise(num_amps = n()) %>%
   mutate(.cluster = paste0("Cluster ", .cluster)) %>%
   group_by(.cluster) %>%
