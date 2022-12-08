@@ -21,6 +21,7 @@ library(broom)
 library(tuneR)
 library(theft)
 library(xtable)
+library(rstan)
 
 # Create important folders if none exist
 
@@ -34,6 +35,7 @@ if(!dir.exists('output')) dir.create('output')
 if(!dir.exists('R')) dir.create('R')
 if(!dir.exists('processing')) dir.create('processing')
 if(!dir.exists('report')) dir.create('report')
+if(!dir.exists('stan')) dir.create('stan')
 
 # Load custom functions
 
