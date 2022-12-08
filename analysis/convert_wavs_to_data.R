@@ -11,7 +11,9 @@
 # Author: Trent Henderson, 24 August 2021
 #----------------------------------------
 
-# Run function
+# Run function and join metadata
 
-amplifiers <- get_waveforms()
+amplifiers <- get_waveforms() %>%
+  inner_join(metadata, by = c("id" = "id"))
+
 save(amplifiers, file = "data/raw-signals-numeric/amplifiers.Rda")
