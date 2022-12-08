@@ -30,15 +30,15 @@ X <- scale(X, center = TRUE, scale = TRUE)
 
 #------------------ Gaussian mixture modelling ----------------
 
-storage <- list()
+gmm_models <- list()
 
 # Use parallel processing
 
 options(mc.cores = parallel::detectCores())
 
-# Fit models for 1 <= k <= 9 as we are unsure what the "right" k is
+# Fit models for 1 <= k <= 5 as we are unsure what the "right" k is
 
-for(i in 1:9){
+for(i in 1:5){
 
   # Set up data for Stan
 
@@ -51,28 +51,46 @@ for(i in 1:9){
 
   fit <- rstan::stan(data = stan_data,
                      file = "stan/gmm.stan",
-                     iter = 5000,
+                     iter = 11000,
                      chains = 4,
                      warmup = 1000,
                      seed = 123)
 
-  storage[[i]] <- fit
+  gmm_models[[i]] <- fit
 }
+
+# Save models so we don't have to re-fit each time we do analysis as they take a long time
+
+save(gmm_models, "data/models/gmm_models.Rda")
 
 #------------------ Output checks and results ----------------
 
-# Compare models using log marginal likelihood to determine optimal k
+#------------------
+# Model comparisons
+#------------------
 
-lml1 <- rstan::extract(storage[[1]])$lml
-lml2 <- rstan::extract(storage[[2]])$lml
-lml3 <- rstan::extract(storage[[3]])$lml
-lml4 <- rstan::extract(storage[[4]])$lml
-lml5 <- rstan::extract(storage[[5]])$lml
-lml6 <- rstan::extract(storage[[6]])$lml
-lml7 <- rstan::extract(storage[[7]])$lml
-lml8 <- rstan::extract(storage[[8]])$lml
-lml9 <- rstan::extract(storage[[9]])$lml
+# Grab log probabilities of each model
 
-# Find the model with the highest log marginal likelihood
+lps <- c()
 
-best_model <- which.max(c(lml1, lml2, lml3, lml4, lml5, lml6, lml7, lml8, lml9))
+for(i in 1:length(gmm_models)){
+  lps <- append(lps, unique(extract(gmm_models[[i]])$lp__))
+}
+
+# Find the model with the highest log marginal likelihood to determine optimal k
+
+best_model <- which.max(lps)
+
+#--------------------
+# Parameter estimates
+#--------------------
+
+# Density plots of the marginalised posteriors of the Gaussian mixture means
+
+params <- extract(gmm_models[[3]]) # Substitute for correct k once we know it
+
+#-----------------------------
+# Predicted cluster membership
+#-----------------------------
+
+#

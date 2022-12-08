@@ -36,3 +36,20 @@ model {
    target += log_sum_exp(ps);
  }
 }
+
+generated quantities {
+
+  // Sample from the posterior distribution of mixture component assignments for each data point
+
+  int<lower=1,upper=K> z[N];
+  for (n in 1:N) {
+    z[n] = categorical_rng(theta);
+  }
+
+  // Compute predicted classes for each data point
+
+  int<lower=1,upper=K> y_pred[N];
+  for (n in 1:N) {
+    y_pred[n] = z[n];
+  }
+}
