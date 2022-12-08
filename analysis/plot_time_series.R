@@ -29,7 +29,7 @@ plot_time_series <- function(data, t1, t2){
 
   p <- amplifiers %>%
     filter(timepoint %in% seq(from = t1, to = t2, by = 1)) %>%
-    ggplot(aes(x = timepoint, y = amplitude, colour = id)) +
+    ggplot(aes(x = timepoint, y = amplitude, colour = plugin)) +
     geom_line() +
     labs(x = "Time",
          y = "Amplitude",
@@ -40,7 +40,7 @@ plot_time_series <- function(data, t1, t2){
           strip.background = element_blank(),
           strip.text = element_text(face = "bold"),
           axis.text.x = element_text(angle = 90)) +
-    facet_wrap(~id, ncol = 3, scales = "free_y")
+    facet_wrap(~id, ncol = 4, scales = "free_y")
 
   return(p)
 }
@@ -53,9 +53,9 @@ p2 <- plot_time_series(data = amplifiers, t1 = max(amplifiers$timepoint) - 1000,
 
 # Save plots
 
-ggsave("output/time-series.png", p, units = "in", height = 8, width = 8)
-ggsave("report/time-series.pdf", p, units = "in", height = 8, width = 8)
-ggsave("output/time-series2.png", p1, units = "in", height = 8, width = 8)
-ggsave("report/time-series2.pdf", p1, units = "in", height = 8, width = 8)
-ggsave("output/time-series3.png", p2, units = "in", height = 8, width = 8)
-ggsave("report/time-series3.pdf", p2, units = "in", height = 8, width = 8)
+ggsave("output/time-series.png", p, units = "in", height = 11, width = 11)
+ggsave("report/time-series.pdf", p, units = "in", height = 11, width = 11)
+ggsave("output/time-series2.png", p1, units = "in", height = 11, width = 11)
+ggsave("report/time-series2.pdf", p1, units = "in", height = 11, width = 11)
+ggsave("output/time-series3.png", p2, units = "in", height = 11, width = 11)
+ggsave("report/time-series3.pdf", p2, units = "in", height = 11, width = 11)

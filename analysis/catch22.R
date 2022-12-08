@@ -20,9 +20,16 @@ feat_mat <- calculate_features(data = amplifiers,
                                id_var = "id",
                                time_var = "timepoint",
                                values_var = "amplitude",
-                               group_var = "group",
+                               group_var = "brand",
                                feature_set = "catch22",
+                               catch24 = TRUE,
                                seed = 123)
+
+# Add in metadata
+
+feat_mat <- feat_mat %>%
+  inner_join(metadata, by = c("id" = "id", "group" = "brand")) %>%
+  rename(brand = group)
 
 # Save output
 
