@@ -19,8 +19,8 @@ library(ggplot2)
 library(ggrepel)
 library(broom)
 library(tuneR)
-library(R.matlab)
 library(theft)
+library(xtable)
 
 # Create important folders if none exist
 

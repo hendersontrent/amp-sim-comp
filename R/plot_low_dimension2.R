@@ -7,7 +7,7 @@
 #' @importFrom broom augment
 #' @importFrom broom tidy
 #' @importFrom stats prcomp
-#' @importFrom ggrepel geom_label_repel
+#' @importFrom ggrepel geom_text_repel
 #' @import Rtsne
 #' @param data a dataframe with at least 2 columns called \code{"names"} and \code{"values"}
 #' @param is_normalised a Boolean as to whether the input feature values have already been scaled. Defaults to \code{FALSE}
@@ -260,7 +260,7 @@ plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", grou
           ggplot2::geom_point(size = 1.5, ggplot2::aes(colour = .data$group_id))
       } else{
         p <- p +
-          ggplot2::geom_point(size = 2.25, ggplot2::aes(colour = .data$group_id))
+          ggplot2::geom_point(size = 2.5, ggplot2::aes(colour = .data$group_id))
       }
 
       if(low_dim_method == "PCA"){
@@ -269,16 +269,16 @@ plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", grou
                         y = paste0("PC 2"," (", eigen_pc2, ")"),
                         colour = NULL) +
           ggplot2::theme_bw() +
-          ggrepel::geom_label_repel(aes(label = id, colour = group_id), size = 2.5, fontface = "bold", max.overlaps = Inf) +
-          ggplot2::theme(legend.position = "none")
+          ggrepel::geom_text_repel(aes(label = id, colour = group_id), size = 2, fontface = "bold", max.overlaps = Inf) +
+          ggplot2::theme(legend.position = "bottom")
       } else{
         p <- p +
           ggplot2::labs(x = "Dimension 1",
                         y = "Dimension 2",
                         colour = NULL) +
           ggplot2::theme_bw() +
-          ggrepel::geom_label_repel(aes(label = id, colour = group_id), size = 2.5, fontface = "bold", max.overlaps = Inf) +
-          ggplot2::theme(legend.position = "none")
+          ggrepel::geom_text_repel(aes(label = id, colour = group_id), size = 2, fontface = "bold", max.overlaps = Inf) +
+          ggplot2::theme(legend.position = "bottom")
       }
     }
 
@@ -304,14 +304,14 @@ plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", grou
           ggplot2::geom_point(size = 1.5, colour = "black")
       } else{
         p <- p +
-          ggplot2::geom_point(size = 2, colour = "black")
+          ggplot2::geom_point(size = 2.5, colour = "black")
       }
 
       if(low_dim_method == "PCA"){
         p <- p +
           ggplot2::labs(x = paste0("PC 1"," (", eigen_pc1, ")"),
                         y = paste0("PC 2"," (", eigen_pc2, ")")) +
-          ggrepel::geom_label_repel(aes(label = id, colour = group_id), size = 2.5, fontface = "bold")
+          ggrepel::geom_text_repel(aes(label = id, colour = group_id), size = 2, fontface = "bold")
       } else{
         p <- p +
           ggplot2::labs(x = "Dimension 1",
