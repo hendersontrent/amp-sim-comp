@@ -51,9 +51,8 @@ for(i in 1:5){
 
   fit <- rstan::stan(data = stan_data,
                      file = "stan/gmm.stan",
-                     iter = 11000,
+                     iter = 10000,
                      chains = 4,
-                     warmup = 1000,
                      seed = 123)
 
   gmm_models[[i]] <- fit
