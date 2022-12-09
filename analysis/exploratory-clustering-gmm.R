@@ -90,4 +90,9 @@ print(gmm_models[[best_model]])
 # Predicted cluster membership of best model
 #-------------------------------------------
 
-#
+preds <- extract(gmm_models[[best_model]])$y_pred
+colnames(preds) <- rownames(X)
+
+preds <- as.data.frame(preds) %>%
+  mutate(iteration = row_number()) %>%
+  pivot_longer(cols = !iteration, names_to = "id", values_to = "cluster")
