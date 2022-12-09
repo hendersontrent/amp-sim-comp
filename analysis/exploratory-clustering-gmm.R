@@ -51,17 +51,17 @@ for(i in 1:5){
 
   fit <- rstan::stan(data = stan_data,
                      file = "stan/gmm.stan",
-                     iter = 11000,
+                     iter = 15000,
                      chains = 4,
-                     warmup = 1000,
-                     seed = 123)
+                     seed = 123,
+                     control = list(max_treedepth = 15))
 
   gmm_models[[i]] <- fit
 }
 
 # Save models so we don't have to re-fit each time we do analysis as they take a long time
 
-save(gmm_models, "data/models/gmm_models.Rda")
+save(gmm_models, file = "data/models/gmm_models.Rda")
 
 #------------------ Output checks and results ----------------
 
@@ -74,23 +74,25 @@ save(gmm_models, "data/models/gmm_models.Rda")
 lps <- c()
 
 for(i in 1:length(gmm_models)){
-  lps <- append(lps, unique(extract(gmm_models[[i]])$lp__))
+  i_lps <- extract(gmm_models[[i]])$lp__
+  lps <- append(lps, mean(i_lps))
 }
 
-# Find the model with the highest log marginal likelihood to determine optimal k
+# Find the model with the highest log probability to determine optimal k
 
 best_model <- which.max(lps)
 
-#--------------------
-# Parameter estimates
-#--------------------
+# Check output of best model
 
-# Density plots of the marginalised posteriors of the Gaussian mixture means
+print(gmm_models[[best_model]])
 
-params <- extract(gmm_models[[3]]) # Substitute for correct k once we know it
+#-------------------------------------------
+# Predicted cluster membership of best model
+#-------------------------------------------
 
-#-----------------------------
-# Predicted cluster membership
-#-----------------------------
+preds <- extract(gmm_models[[best_model]])$y_pred
+colnames(preds) <- rownames(X)
 
-#
+preds <- as.data.frame(preds) %>%
+  mutate(iteration = row_number()) %>%
+  pivot_longer(cols = !iteration, names_to = "id", values_to = "cluster")
