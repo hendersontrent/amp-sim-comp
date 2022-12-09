@@ -23,7 +23,7 @@ wide_data <- feat_mat %>%
   pivot_wider(id_cols = "id", names_from = "names", values_from = "values") %>%
   column_to_rownames(var = "id")
 
-# Convert to matrix and scale values for numerical stability in Stan
+# Convert to matrix and scale values for numerical stability
 
 wide_data <- as.matrix(wide_data)
 wide_data <- scale(wide_data, center = TRUE, scale = TRUE)
