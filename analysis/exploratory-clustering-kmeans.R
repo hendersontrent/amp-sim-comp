@@ -23,6 +23,11 @@ wide_data <- feat_mat %>%
   pivot_wider(id_cols = "id", names_from = "names", values_from = "values") %>%
   column_to_rownames(var = "id")
 
+# Convert to matrix and scale values for numerical stability
+
+wide_data <- as.matrix(wide_data)
+wide_data <- scale(wide_data, center = TRUE, scale = TRUE)
+
 #------------- Fit k-means models --------------
 
 # Fit k-means models over the range of 1 <= k <= 9 as we are unsure what the "right" k is
@@ -70,10 +75,10 @@ ggsave("report/k-elbow.pdf", p, units = "in", width = 6, height = 6)
 
 #------------- Determine cluster membership --------------
 
-# k-means finds k = 3 as the best in terms of total within sums of squares, so we can apply labels to original data
+# k-means finds k = 6 as the best in terms of total within sums of squares, so we can apply labels to original data
 
 k_labels <- assignments %>%
-  filter(k == 3) %>%
+  filter(k == 6) %>%
   mutate(id = rownames(wide_data)) %>%
   inner_join(metadata, by = c("id" = "id"))
 
@@ -108,7 +113,7 @@ p1 <- k_labels %>%
   theme(panel.grid.minor = element_blank(),
         axis.text.x = element_text(angle = 90),
         strip.background = element_blank()) +
-  facet_wrap(~ .cluster, ncol = 3, nrow = 1)
+  facet_wrap(~ .cluster, ncol = 3, nrow = 2)
 
 print(p1)
 ggsave("output/k-gain.png", p1, units = "in", width = 6, height = 6)

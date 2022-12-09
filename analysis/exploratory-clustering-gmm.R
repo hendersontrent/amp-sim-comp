@@ -1,7 +1,7 @@
 #-----------------------------------------
-# This script sets out to produce a
-# probabilistic clustering model of the
-# amplifiers based on the feature matrix
+# This script sets out to produce an
+# exploratory cluster analysis of the
+# amplifiers based on their feature values
 #
 # NOTE: This script requires setup.R and
 # analysis/catch22.R to have been run
@@ -18,81 +18,47 @@ load("data/features/feat_mat.Rda")
 
 # Make dataframe into wide numerical matrix
 
-X <- feat_mat %>%
+wide_data <- feat_mat %>%
   dplyr::select(c(id, names, values)) %>%
   pivot_wider(id_cols = "id", names_from = "names", values_from = "values") %>%
   column_to_rownames(var = "id")
 
-# Convert to matrix and scale values for numerical stability in Stan
+# Convert to matrix and scale values for numerical stability
 
-X <- as.matrix(X)
-X <- scale(X, center = TRUE, scale = TRUE)
+wide_data <- as.matrix(wide_data)
+wide_data <- scale(wide_data, center = TRUE, scale = TRUE)
 
-#------------------ Gaussian mixture modelling ----------------
+#------------- Fit Gaussian mixture models --------------
 
-gmm_models <- list()
+# Fit GMMs over the range of 1 <= k <= 9 as we are unsure what the "right" k is
+# NOTE: `mclust` automatically does this for us!
 
-# Use parallel processing
+gmm <- Mclust(wide_data)
 
-options(mc.cores = parallel::detectCores())
+save(gmm, file = "data/models/gmm.Rda")
 
-# Fit models for 1 <= k <= 5 as we are unsure what the "right" k is
+#------------- Analyse best model --------------
 
-for(i in 1:5){
+# Print summary
 
-  # Set up data for Stan
+summary(gmm)
 
-  stan_data <- list(N = nrow(X),
-                    D = ncol(X),
-                    K = i,
-                    y = array(as.vector(X), dim = c(nrow(X), ncol(X))))
+# Basic BIC plot
 
-  # Run model
+pdf(file = "report/gmm-bic.pdf")
+plot(gmm, what = 'BIC', legendArgs = list(x = "bottomright", ncol = 5))
+dev.off()
 
-  fit <- rstan::stan(data = stan_data,
-                     file = "stan/gmm.stan",
-                     iter = 15000,
-                     chains = 4,
-                     seed = 123,
-                     control = list(max_treedepth = 15))
+# Find which amps went into each cluster
 
-  gmm_models[[i]] <- fit
-}
+clusters <- data.frame(cluster = gmm$classification) %>%
+  rownames_to_column(var = "id") %>%
+  inner_join(metadata, by = c("id" = "id")) %>%
+  dplyr::select(-c(brand)) %>%
+  arrange(cluster) %>%
+  rename(`Amplifier Name` = id,
+         Plugin = plugin,
+         Cluster = cluster,
+         `Gain Structure` = amp_type)
 
-# Save models so we don't have to re-fit each time we do analysis as they take a long time
-
-save(gmm_models, file = "data/models/gmm_models.Rda")
-
-#------------------ Output checks and results ----------------
-
-#------------------
-# Model comparisons
-#------------------
-
-# Grab log probabilities of each model
-
-lps <- c()
-
-for(i in 1:length(gmm_models)){
-  i_lps <- extract(gmm_models[[i]])$lp__
-  lps <- append(lps, mean(i_lps))
-}
-
-# Find the model with the highest log probability to determine optimal k
-
-best_model <- which.max(lps)
-
-# Check output of best model
-
-print(gmm_models[[best_model]])
-
-#-------------------------------------------
-# Predicted cluster membership of best model
-#-------------------------------------------
-
-preds <- extract(gmm_models[[best_model]])$y_pred
-colnames(preds) <- rownames(X)
-
-preds <- as.data.frame(preds) %>%
-  mutate(iteration = row_number()) %>%
-  pivot_longer(cols = !iteration, names_to = "id", values_to = "cluster")
+print(xtable::xtable(clusters), include.rownames = FALSE) # For LaTeX report

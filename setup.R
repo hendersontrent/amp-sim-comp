@@ -22,6 +22,7 @@ library(tuneR)
 library(theft)
 library(xtable)
 library(rstan)
+library(mclust)
 
 # Create important folders if none exist
 
