@@ -69,18 +69,21 @@ save(gmm_models, file = "data/models/gmm_models.Rda")
 # Model comparisons
 #------------------
 
-# Grab log probabilities of each model
+# Choose the model with the smallest Deviance Information Criterion (DIC) --- -2 * mean(log predictive density) + 2 * var(log predictive density)
 
-lps <- c()
+dic <- c()
 
 for(i in 1:length(gmm_models)){
-  i_lps <- extract(gmm_models[[i]])$lp__
-  lps <- append(lps, mean(i_lps))
+  lpd <- extract(gmm_models[[i]])$log_predictive_density # Extract log predictive density
+  mean_lpd <- mean(lpd1) # Compute mean of LPD
+  var_lpd <- var(lpd1) # Compute variance of LPD
+  dic1 <- -2 * mean_lpd + 2 * var_lpd # Compute DIC
+  dic <- append(dic, dic1)
 }
 
-# Find the model with the highest log probability to determine optimal k
+# Find the model with the highest mean LOO log predictive density to determine optimal k
 
-best_model <- which.max(lps)
+best_model <- which.max(dic)
 
 # Check output of best model
 

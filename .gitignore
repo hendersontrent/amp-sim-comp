@@ -6,6 +6,7 @@
 .RData
 .Rda
 data/raw-signals-numeric/amplifiers.Rda
+data/models/gmm_models.Rda
 
 # User-specific files
 .Ruserdata
