@@ -30,7 +30,7 @@ X <- scale(X, center = TRUE, scale = TRUE)
 
 #------------------ Gaussian mixture modelling ----------------
 
-gmm_models <- list()
+gmm_models_stan <- list()
 
 # Use parallel processing
 
@@ -56,12 +56,12 @@ for(i in 1:5){
                      seed = 123,
                      control = list(max_treedepth = 15))
 
-  gmm_models[[i]] <- fit
+  gmm_models_stan[[i]] <- fit
 }
 
 # Save models so we don't have to re-fit each time we do analysis as they take a long time
 
-save(gmm_models, file = "data/models/gmm_models.Rda")
+save(gmm_models_stan, file = "data/models/gmm_models_stan.Rda")
 
 #------------------ Output checks and results ----------------
 

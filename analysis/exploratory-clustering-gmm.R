@@ -35,6 +35,8 @@ wide_data <- scale(wide_data, center = TRUE, scale = TRUE)
 
 gmm <- Mclust(wide_data)
 
+save(gmm, file = "data/models/gmm.Rda")
+
 #------------- Analyse best model --------------
 
 # Print summary
