@@ -74,7 +74,8 @@ save(gmm_models, file = "data/models/gmm_models.Rda")
 lps <- c()
 
 for(i in 1:length(gmm_models)){
-  lps <- append(lps, unique(extract(gmm_models[[i]])$lp__))
+  i_lps <- extract(gmm_models[[i]])$lp__
+  lps <- append(lps, mean(i_lps))
 }
 
 # Find the model with the highest log probability to determine optimal k
@@ -83,7 +84,7 @@ best_model <- which.max(lps)
 
 # Check output of best model
 
-print(gmm_models[[3]])
+print(gmm_models[[best_model]])
 
 #-------------------------------------------
 # Predicted cluster membership of best model
