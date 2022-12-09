@@ -19,6 +19,7 @@
 #' @param plot a Boolean as to whether a plot or model fit information should be returned. Defaults to \code{TRUE}
 #' @param show_covariance a Boolean as to whether covariance ellipses should be shown on the plot. Defaults to \code{FALSE}
 #' @param seed fixed number for R's random number generator to ensure reproducibility
+#' @param return_loading_plot Boolean whether to return the PC1/PC2 factor loading plot. Defaults to \code{FALSE}
 #' @return if \code{plot = TRUE}, returns an object of class \code{ggplot}, if \code{plot = FALSE} returns an object of class dataframe with PCA results
 #' @author Trent Henderson
 #'
@@ -26,7 +27,7 @@
 plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", group_var = NULL,
                                method = c("z-score", "Sigmoid", "RobustSigmoid", "MinMax"),
                                low_dim_method = c("PCA", "t-SNE"), perplexity = 30,
-                               plot = TRUE, show_covariance = FALSE, seed = 123){
+                               plot = TRUE, show_covariance = FALSE, seed = 123, return_loading_plot = FALSE){
 
   # Set defaults
 
@@ -165,22 +166,30 @@ plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", grou
     fits <- dat_filtered %>%
       stats::prcomp(scale = FALSE)
 
-    # Retrieve eigenvalues and tidy up variance explained for plotting
+    if(return_loading_plot){
 
-    eigens <- fits %>%
-      broom::tidy(matrix = "eigenvalues") %>%
-      dplyr::filter(.data$PC %in% c(1, 2)) %>% # Filter to just the 2 going in the plot
-      dplyr::select(c(.data$PC, .data$percent)) %>%
-      dplyr::mutate(percent = round(.data$percent * 100), digits = 1)
+      load_plot <- plot_loadings(pca = fits)
+      return(load_plot)
 
-    eigen_pc1 <- eigens %>%
-      dplyr::filter(.data$PC == 1)
+    } else{
 
-    eigen_pc2 <- eigens %>%
-      dplyr::filter(.data$PC == 2)
+      # Retrieve eigenvalues and tidy up variance explained for plotting
 
-    eigen_pc1 <- paste0(eigen_pc1$percent,"%")
-    eigen_pc2 <- paste0(eigen_pc2$percent,"%")
+      eigens <- fits %>%
+        broom::tidy(matrix = "eigenvalues") %>%
+        dplyr::filter(.data$PC %in% c(1, 2)) %>% # Filter to just the 2 going in the plot
+        dplyr::select(c(.data$PC, .data$percent)) %>%
+        dplyr::mutate(percent = round(.data$percent * 100), digits = 1)
+
+      eigen_pc1 <- eigens %>%
+        dplyr::filter(.data$PC == 1)
+
+      eigen_pc2 <- eigens %>%
+        dplyr::filter(.data$PC == 2)
+
+      eigen_pc1 <- paste0(eigen_pc1$percent,"%")
+      eigen_pc2 <- paste0(eigen_pc2$percent,"%")
+    }
 
   } else{
 

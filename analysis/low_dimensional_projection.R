@@ -29,7 +29,8 @@ p <- plot_low_dimension2(feat_mat,
                          method = "z-score",
                          plot = TRUE,
                          show_covariance = FALSE,
-                         seed = 123)
+                         seed = 123,
+                         return_loading_plot = FALSE)
 
 print(p)
 
@@ -48,9 +49,26 @@ p1 <- plot_low_dimension2(feat_mat,
 
 print(p1)
 
+# Loadings plot for PCA
+
+p2 <- plot_low_dimension2(feat_mat,
+                         is_normalised = FALSE,
+                         id_var = "id",
+                         group_var = "plugin",
+                         low_dim_method = "PCA",
+                         method = "z-score",
+                         plot = TRUE,
+                         show_covariance = FALSE,
+                         seed = 123,
+                         return_loading_plot = TRUE)
+
+print(p2)
+
 # Save plots
 
 ggsave("output/catch22-low-dim.png", p, units = "in", width = 9, height = 9)
 ggsave("report/catch22-low-dim.pdf", p, units = "in", width = 9, height = 9)
 ggsave("output/catch22-low-dim-tsne.png", p1, units = "in", width = 9, height = 9)
 ggsave("report/catch22-low-dim-tsne.pdf", p1, units = "in", width = 9, height = 9)
+ggsave("output/catch22-low-dim-pca-loads.png", p2, units = "in", width = 9, height = 9)
+ggsave("report/catch22-low-dim-pca-loads.pdf", p2, units = "in", width = 9, height = 9)
