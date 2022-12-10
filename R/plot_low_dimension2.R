@@ -52,20 +52,15 @@ plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", grou
 
   expected_cols_1 <- "names"
   expected_cols_2 <- "values"
-  expected_cols_3 <- "method"
   the_cols <- colnames(data)
   '%ni%' <- Negate('%in%')
 
   if(expected_cols_1 %ni% the_cols){
-    stop("data should contain at least three columns called 'names', 'values', and 'method'. These are automatically produced by theft::calculate_features. Please run this first and then pass the resultant dataframe to this function.")
+    stop("data should contain at least two columns called 'names' and 'values'.")
   }
 
   if(expected_cols_2 %ni% the_cols){
-    stop("data should contain at least three columns called 'names', 'values', and 'method'. These are automatically produced by theft::calculate_features. Please run this first and then pass the resultant dataframe to this function.")
-  }
-
-  if(expected_cols_3 %ni% the_cols){
-    stop("data should contain at least three columns called 'names', 'values', and 'method'. These are automatically produced by theft::calculate_features. Please run this first and then pass the resultant dataframe to this function.")
+    stop("data should contain at least two columns called 'names' and 'values'.")
   }
 
   if(!is.numeric(data$values)){
@@ -123,7 +118,8 @@ plot_low_dimension2 <- function(data, is_normalised = FALSE, id_var = "id", grou
 
   if(!is.null(id_var)){
     data_id <- data %>%
-      dplyr::rename(id = dplyr::all_of(id_var))
+      dplyr::rename(id = dplyr::all_of(id_var)) %>%
+      dplyr::mutate(method = "catch22")
   }
 
   #------------- Normalise data -------------------

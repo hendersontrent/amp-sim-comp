@@ -3,7 +3,7 @@
 # correlation matrix plots between plugins
 #
 # NOTE: This script requires setup.R and
-# analysis/catch22.R to have been run
+# analysis/catch22-dt.R to have been run
 # first
 #----------------------------------------
 
@@ -38,19 +38,19 @@ print(p1)
 #-------------------- Time series x Feature plot ------------------
 
 p2 <- plot_all_features2(feat_mat,
-                        is_normalised = FALSE,
-                        id_var = "id",
-                        method = "z-score",
-                        clust_method = "average",
-                        interactive = FALSE)
+                         is_normalised = FALSE,
+                         id_var = "id",
+                         method = "z-score",
+                         clust_method = "average",
+                         interactive = FALSE)
 
 print(p2)
 
 #-------------------- Save plots ------------------
 
-ggsave("output/correlation-matrix.png", p, units = "in", height = 9, width = 9)
-ggsave("report/correlation-matrix.pdf", p, units = "in", height = 9, width = 9)
-ggsave("output/correlation-matrix-feature.png", p1, units = "in", height = 9, width = 9)
-ggsave("report/correlation-matrix-feature.pdf", p1, units = "in", height = 9, width = 9)
-ggsave("output/timeseries-by-feature-matrix.png", p2, units = "in", height = 9, width = 9)
-ggsave("report/timeseries-by-feature-matrix.pdf", p2, units = "in", height = 9, width = 9)
+ggsave("output/correlation-matrix.png", p, units = "in", height = 10, width = 10)
+ggsave("report/correlation-matrix.pdf", p, units = "in", height = 10, width = 10)
+ggsave("output/correlation-matrix-feature.png", p1, units = "in", height = 10, width = 10)
+ggsave("report/correlation-matrix-feature.pdf", p1, units = "in", height = 10, width = 10)
+ggsave("output/timeseries-by-feature-matrix.png", p2, units = "in", height = 10, width = 10)
+ggsave("report/timeseries-by-feature-matrix.pdf", p2, units = "in", height = 10, width = 10)

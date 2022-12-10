@@ -5,7 +5,7 @@
 # matrix
 #
 # NOTE: This script requires setup.R and
-# analysis/catch22.R to have been run
+# analysis/catch22-dt.R to have been run
 # first
 #----------------------------------------
 
@@ -66,9 +66,9 @@ print(p2)
 
 # Save plots
 
-ggsave("output/catch22-low-dim.png", p, units = "in", width = 9, height = 9)
-ggsave("report/catch22-low-dim.pdf", p, units = "in", width = 9, height = 9)
-ggsave("output/catch22-low-dim-tsne.png", p1, units = "in", width = 9, height = 9)
-ggsave("report/catch22-low-dim-tsne.pdf", p1, units = "in", width = 9, height = 9)
-ggsave("output/catch22-low-dim-pca-loads.png", p2, units = "in", width = 9, height = 9)
-ggsave("report/catch22-low-dim-pca-loads.pdf", p2, units = "in", width = 9, height = 9)
+ggsave("output/catch22-low-dim.png", p, units = "in", width = 10, height = 10)
+ggsave("report/catch22-low-dim.pdf", p, units = "in", width = 10, height = 10)
+ggsave("output/catch22-low-dim-tsne.png", p1, units = "in", width = 10, height = 10)
+ggsave("report/catch22-low-dim-tsne.pdf", p1, units = "in", width = 10, height = 10)
+ggsave("output/catch22-low-dim-pca-loads.png", p2, units = "in", width = 10, height = 10)
+ggsave("report/catch22-low-dim-pca-loads.pdf", p2, units = "in", width = 10, height = 10)
