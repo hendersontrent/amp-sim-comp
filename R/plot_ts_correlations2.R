@@ -168,7 +168,7 @@ plot_ts_correlations2 <- function(data, is_normalised = NULL, id_var = "id",
     ggplot2::theme_bw() +
     ggplot2::theme(panel.grid = ggplot2::element_blank(),
                    legend.position = "bottom") +
-      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
+      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1))
 
   if(interactive){
     p <- plotly::ggplotly(p, tooltip = c("text")) %>%

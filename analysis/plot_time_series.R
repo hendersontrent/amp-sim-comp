@@ -17,7 +17,7 @@ load("data/raw-signals-numeric/amplifiers.Rda")
 
 #------------- Draw plots -------------
 
-#' Draw time series plots for each plugin
+#' Draw time series plots for a sample of plugins
 #' @param data the dataframe of time series values
 #' @param t1 the first timepoint to plot from
 #' @param t2 the last timepoint to plot to
@@ -27,7 +27,13 @@ load("data/raw-signals-numeric/amplifiers.Rda")
 
 plot_time_series <- function(data, t1, t2){
 
+  keepers <- c("Neural DSP Abasi 1", "Neural DSP Petrucci 4", "Neural DSP Nolly 3",
+               "Neural DSP Fortin Nameless", "Neural DSP Cory Wong 1", "Neural DSP Omega Granophyre_EL34",
+               "STL Tonality Will Putney 1_6L6", "STL Tonality STL Tonality Andy James 1_KT88", "STL Tonality Howard Benson 2_Clean",
+               "STL Tonality Lasse Lammert 3", "STL Tonality Will Putney 4_KT88", "STL Tonality Howard Benson 5")
+
   p <- amplifiers %>%
+    filter(id %in% keepers) %>%
     filter(timepoint %in% seq(from = t1, to = t2, by = 1)) %>%
     ggplot(aes(x = timepoint, y = amplitude, colour = plugin)) +
     geom_line() +
@@ -40,7 +46,7 @@ plot_time_series <- function(data, t1, t2){
           strip.background = element_blank(),
           strip.text = element_text(face = "bold"),
           axis.text.x = element_text(angle = 90)) +
-    facet_wrap(~id, ncol = 4, scales = "free_y")
+    facet_wrap(~id, nrow = 4, ncol = 3, scales = "free_y")
 
   return(p)
 }

@@ -4,7 +4,7 @@
 # amplifiers based on the feature matrix
 #
 # NOTE: This script requires setup.R and
-# analysis/catch22.R to have been run
+# analysis/catch22-dt.R to have been run
 # first
 #-----------------------------------------
 

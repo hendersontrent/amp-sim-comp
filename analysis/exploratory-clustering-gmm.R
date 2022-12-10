@@ -4,7 +4,7 @@
 # amplifiers based on their feature values
 #
 # NOTE: This script requires setup.R and
-# analysis/catch22.R to have been run
+# analysis/catch22-dt.R to have been run
 # first
 #-----------------------------------------
 
@@ -34,7 +34,6 @@ wide_data <- scale(wide_data, center = TRUE, scale = TRUE)
 # NOTE: `mclust` automatically does this for us!
 
 gmm <- Mclust(wide_data)
-
 save(gmm, file = "data/models/gmm.Rda")
 
 #------------- Analyse best model --------------
@@ -61,4 +60,4 @@ clusters <- data.frame(cluster = gmm$classification) %>%
          Cluster = cluster,
          `Gain Structure` = amp_type)
 
-print(xtable::xtable(clusters), include.rownames = FALSE) # For LaTeX report
+print(xtable::xtable(clusters), include.rownames = FALSE, tabular.environment = "longtable", floating = FALSE) # For LaTeX report

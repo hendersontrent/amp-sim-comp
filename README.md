@@ -7,7 +7,7 @@ Many different virtual guitar amplifier simulators exist today. While most music
 
 ## Included amplifiers
 
-Currently, analysis includes the entire [Neural DSP](https://neuraldsp.com/plugins) product line and the four guitar amplifiers included in [STL Tonality Will Putney](https://www.stltones.com/products/stl-tonality-will-putney-guitar-plug-in).
+Currently, analysis includes the entire [Neural DSP](https://neuraldsp.com/plugins) product line and all amplifiers included in [STL Tonality Will Putney](https://www.stltones.com/products/stl-tonality-will-putney-guitar-plug-in), [STL Tonality Lasse Lammert](https://www.stltones.com/products/tonality-lasse-lammert-guitar-plug-in-suite), [STl Tonality Andy James](https://www.stltones.com/products/tonality-andy-james-guitar-plug-in-suite), and [STL Tonality Howard Benson](https://www.stltones.com/products/stltonalityhowardbenson).
 
 ## Basic methodology
 
