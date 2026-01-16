@@ -37,11 +37,13 @@ rm(data_id, ids_to_keep, cor_dat)
 
 #------------------ Correlations ----------------
 
-plot(features2, type = "matrix", norm_method = "Sigmoid", unit_int = TRUE, clust_method = "average") +
+p <- plot(features2, type = "matrix", norm_method = "Sigmoid", unit_int = TRUE, clust_method = "average") +
   theme(axis.text.y = element_text(size = 6)) +
   labs(title = "Time series by feature matrix for a sample of guitar VSTs",
        y = "Amplifier",
        caption = "Feature values normalised using sigmoid transformation. Hierarchical clustering was used to structure rows and columns, with average clustering selected as the method.")
+
+ggsave("output/feature-matrix.svg", p, units = "in", width = 11, height = 11)
 
 #------------------ Low-dimensional projections ----------------
 
